@@ -1,8 +1,13 @@
 const express = require('express');
 const shopRoutes = require('./routes/shop');
 const app = express();
+const dbHelper = require('./data/DbHelper');
 
 
 app.use(shopRoutes);
 
-app.listen(3000);
+dbHelper.initDb().then(res => {
+    app.listen(3000);
+}).catch(err => {
+    console.log(err);
+})
