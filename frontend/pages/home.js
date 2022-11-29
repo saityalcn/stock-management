@@ -13,6 +13,7 @@ import {
   Container,
 } from 'semantic-ui-react';
 
+
 let isim = 'Mehmet Mehmet';
 let sube = 'Tekerek sube';
 const koyu_gri = '#D8D9CF';
