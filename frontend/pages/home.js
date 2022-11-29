@@ -1,5 +1,6 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
+import Siparis from './siparis';
 import {
   Header,
   Icon,
@@ -9,6 +10,7 @@ import {
   Sidebar,
   Input,
   Dropdown,
+  Container,
 } from 'semantic-ui-react';
 
 let isim = 'Mehmet Mehmet';
@@ -26,7 +28,7 @@ export default () => {
         href="semantic/dist/semantic.min.css"
       ></link>
       <Menu style={{ backgroundColor: beyaz_gri, margin: '0' }}>
-        <Menu.Item name={sube} bold />
+        <Menu.Item name={sube} />
         <Menu.Menu position="right">
           <Menu.Item name={isim} />
 
@@ -67,8 +69,13 @@ export default () => {
 
         <Sidebar.Pusher>
           <Segment basic>
-            <Header as="h3">Application Table</Header>
-            <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" />
+            <Header as="h2">Siparişler</Header>
+            {/* <Container fluid> */}
+            <Siparis></Siparis>
+
+            {/* </Container> */}
+
+            {/* <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" /> */}
           </Segment>
         </Sidebar.Pusher>
       </Sidebar.Pushable>
