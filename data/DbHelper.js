@@ -13,10 +13,25 @@ module.exports.initDb = () => {
     return client.connect();
 }
 
+// Orders
+module.exports.getOrders = () => {
+    return client.query("select order_id, product_name, amount,branch_name,order_date,estimated_shipment_date,order_state from orders, product_infos, branches where product_infos.product_id = orders.product_id AND branches.branch_id = orders.branch_id ");
+}
+
+module.exports.updateOrderState = (orderId) => {
+    const queryText = "update orders set order_state='Teslim Edildi' where order_id=$1"
+    const values = [orderId];
+    return client.query(queryText,values);
+}
+
+
+// Employee
 module.exports.getEmployees = () => {
     return client.query("select * from employees");
 }
 
-module.exports.getOrders = () => {
-    return client.query("select order_id, product_name, amount,branch_name,order_date,estimated_shipment_date,order_state from orders, product_infos, branches where product_infos.product_id = orders.product_id AND branches.branch_id = orders.branch_id ");
+module.exports.findEmployeeByEmail = (email) => {
+    const queryText = 'select * from employees where email=$1'
+    const values = [email];
+    return client.query(queryText,values);
 }

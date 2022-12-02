@@ -21,6 +21,15 @@ module.exports.getOrders = (req, res, next) => {
     })
 }
 
+module.exports.postUpdateOrderState = (req,res,next) => {
+    const orderId = req.body.orderid;
+    dbHelper.updateOrderState(orderId).then(result => {
+        res.send();
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
 
 function formatOrder(element){
     return {
