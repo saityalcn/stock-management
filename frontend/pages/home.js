@@ -70,8 +70,8 @@ export default () => {
 
         <Sidebar.Pusher>
           <Segment basic>
+            
             <Header as="h2">Siparişler</Header>
-            {/* <Container fluid> */}
             <Siparis></Siparis>
 
             {/* </Container> */}
