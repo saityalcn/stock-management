@@ -1,13 +1,37 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Table, Button } from 'semantic-ui-react';
-import { useState, useEffect } from 'react'
+import { Table, Button, Form, Visibility } from 'semantic-ui-react';
+import { useEffect } from 'react'
+import { useState,useCallback } from 'react';
 
 let orders = [];
+let orderId;
+let interval;
+const myHeaders = new Headers({
+  'Content-Type': 'application/json'
+});
 
 //TODO siparis gelirse o satiri disable edip yesile boya,
 
+const getOrderId = (selectedOrderId) => {
+  orderId = selectedOrderId;
+}
+
 const render_siparisler = (siparisler) => {
+    const [isSending, setIsSending] = useState(false);
+
+    const sendRequest = useCallback(async (event) => {
+      if (isSending) return;
+      setIsSending(true);
+      const jsonObject = JSON.stringify({orderid: orderId});
+      console.log(jsonObject);
+      const response = await fetch('http://localhost:10500/update-order-state', {method: "POST", headers: myHeaders, body:jsonObject});
+      //jsonResponse = await response.json();
+      //console.log(jsonResponse);
+      window.location.reload(false);
+      setIsSending(false)
+    }, [isSending]);
+
     return siparisler.map((siparis) => {
       let flag = true;
       if (siparis.order_state === "Teslim Edildi") {
@@ -23,14 +47,19 @@ const render_siparisler = (siparisler) => {
           <Table.Cell>{siparis.estimated_shipment_date}</Table.Cell>
           <Table.Cell>{siparis.order_state}</Table.Cell>
           <Table.Cell>
-            {flag && (
-              <Button
-                fluid
-                content="Onayla"
-                icon="check circle"
-                positive
-              ></Button>
-            )}
+            <Form onSubmit={sendRequest}>
+              {flag && (
+                <Button
+                  fluid
+                  content="Onayla"
+                  icon="check circle"
+                  positive
+                  loading={isSending}
+                  type='submit'
+                  onClick={getOrderId(siparis.order_id)}
+                ></Button>
+              )}
+            </Form>
           </Table.Cell>
         </Table.Row>
       );
@@ -46,7 +75,7 @@ function siparis_table(){
     fetch('http://localhost:10500/orders')
       .then((res) => res.json())
       .then((data) => {
-        setData(data)
+        setData(orderId)
         orders = data.orders;
         setLoading(false)
       })

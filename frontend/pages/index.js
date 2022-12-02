@@ -1,4 +1,7 @@
 import React from 'react';
+import { useState,useCallback } from 'react';
+import {useRouter} from 'next/router';
+import jsCookie from 'js-cookie';
 import 'semantic-ui-css/semantic.min.css';
 import {
   Segment,
@@ -10,12 +13,42 @@ import {
   Icon,
   Header,
   PopupContent,
+  Message
 } from 'semantic-ui-react';
 const description = 'Lütfen Sistem Yöneticinizle İletişime Geçiniz..';
 const myfunction = () => {
   console.log('asjkdna');
 };
-export default function Home() {
+
+let jsonResponse;
+let wrongInfoError = false;
+let myHeaders = new Headers({
+  'Content-Type': 'application/json'
+});
+
+function Home() {
+  const [isSending, setIsSending] = useState(false);
+  const router = useRouter();
+  const sendRequest = useCallback(async (event) => {
+    if (isSending) return
+    setIsSending(true);
+    const email = event.target.email.value;
+    const password = event.target.password.value;
+    const jsonObject = JSON.stringify({email: email, password: password});
+    const response = await fetch('http://localhost:10500/account/log-in', {method: "POST", headers: myHeaders, body:jsonObject});
+    jsonResponse = await response.json();
+    console.log(jsonResponse);
+    if(jsonResponse.isAuthenticated === true){
+      jsCookie.set('token', jsonResponse.userId);
+      return router.push('/home');
+    }
+    else
+      wrongInfoError = true;
+    
+    setIsSending(false)
+  }, [isSending]);
+
+  
   return (
     <div>
       <link
@@ -26,22 +59,31 @@ export default function Home() {
       <Segment placeholder>
         <Grid columns={2} relaxed="very" stackable>
           <Grid.Column>
-            <Form>
+          {wrongInfoError && <Message
+              icon='exclamation circle'
+              header='Şifre veya E-Posta Yanlış'
+              content='Girdiğiniz şifre veya e-posta yanlış. Tekrar deneyiniz'
+              error
+            />}
+            <Form onSubmit={sendRequest}>
               <Form.Input
-                icon="user"
+                icon="mail"
                 iconPosition="left"
-                label="Kullanıcı Adı"
-                placeholder="Kullanıcı Adı"
+                name="email"
+                label="E-Posta"
+                placeholder="E-Posta"
               />
               <Form.Input
                 icon="lock"
                 iconPosition="left"
+                name="password"
                 label="Şifre"
                 type="password"
               />
 
-              <Button content="Giriş" primary fluid />
+              <Button primary loading={isSending} fluid type='submit'>Giriş</Button>
             </Form>
+
           </Grid.Column>
 
           <Grid.Column verticalAlign="middle">
@@ -62,3 +104,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home
