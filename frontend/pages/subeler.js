@@ -1,8 +1,13 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Grid, Segment, Card, Image, Button } from 'semantic-ui-react';
+import { Grid, Segment, Card, Image, Button, Menu, Icon } from 'semantic-ui-react';
 import { useState, useEffect } from 'react';
+import MainLayout from './layout';
 
+const koyu_gri = '#D8D9CF';
+const beyaz_gri = '#EDEDED';
+const acik_pembe = '#FF8787';
+const koyu_pembe = '#E26868';
 const sube_ismi = 'Tekerek Sube';
 const address = 'akjdsnjkasdnajkadakjdsnjkasdnajkadakjdsnjkasdnajkad';
 const calisan_sayisi = 10;
@@ -53,7 +58,9 @@ const render_subeler = (subelerimiz) => {
 };
 
 const subeler = () => {
-  return <Card.Group>{render_subeler(subelerimiz)}</Card.Group>;
+  return  <MainLayout>
+            <Card.Group>{render_subeler(subelerimiz)}</Card.Group>
+          </MainLayout>;
 };
 
 export default subeler;

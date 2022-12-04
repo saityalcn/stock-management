@@ -9,9 +9,7 @@ module.exports.getIndex = (req, res, next) => {
 }
 
 module.exports.getOrders = (req, res, next) => {
-    console.log('get orders');
     dbHelper.getOrders().then(result => {
-        console.log(result);
         const map = {
             orders: result.rows.map(element => formatOrder(element))
         };

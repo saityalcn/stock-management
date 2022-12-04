@@ -42,10 +42,8 @@ const render_siparisler = (siparisler) => {
           <Table.Cell>{siparis.order_id}</Table.Cell>
           <Table.Cell>{siparis.product_name}</Table.Cell>
           <Table.Cell>{siparis.amount}</Table.Cell>
-          <Table.Cell>{siparis.branch_name}</Table.Cell>
           <Table.Cell>{siparis.order_date}</Table.Cell>
           <Table.Cell>{siparis.estimated_shipment_date}</Table.Cell>
-          <Table.Cell>{siparis.order_state}</Table.Cell>
           <Table.Cell>
             <Form onSubmit={sendRequest}>
               {flag && (
@@ -86,13 +84,11 @@ function siparis_table(){
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>ID</Table.HeaderCell>
-          <Table.HeaderCell>Ürün</Table.HeaderCell>
-          <Table.HeaderCell>Miktar(adet)</Table.HeaderCell>
           <Table.HeaderCell>Şube</Table.HeaderCell>
-          <Table.HeaderCell>Sipariş Tarihi</Table.HeaderCell>
-          <Table.HeaderCell>Beklenen Teslim Tarihi</Table.HeaderCell>
-          <Table.HeaderCell>Durumu</Table.HeaderCell>
-
+          <Table.HeaderCell>Ürün</Table.HeaderCell>
+          <Table.HeaderCell>İndirimli Fiyat</Table.HeaderCell>
+          <Table.HeaderCell>İndirim Bitiş</Table.HeaderCell>
+          <Table.HeaderCell>İndirimi İptal Et</Table.HeaderCell>
           <Table.HeaderCell> </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
