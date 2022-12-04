@@ -1,0 +1,49 @@
+SELECT * FROM employees
+
+SELECT * FROM update_awl_status()
+
+insert into employees values(4,'Erhan Ufuk',15000,3,true,'2022-12-3')
+insert into employees values(5,'Erhan Ufuk',16500,2,true,'2022-11-15')
+
+UPDATE employees set employee_name = 'Eren Eylül' where employee_id = 5
+
+UPDATE employees set awl_date = '2022-12-01' where employee_id = 4
+
+select * from employees where awl_date is NULL OR awl_date < CURRENT_DATE
+
+
+create function awl_update()
+returns table(
+	employee_id int
+)
+language plpgsql
+as
+$$
+begin
+  UPDATE employees set awl = false where awl_date is NULL OR awl_date < CURRENT_DATE;
+  return query
+	(SELECT updated_id FROM update_awl_employees());
+  UPDATE employees set awl_date = NULL where awl_date < CURRENT_DATE;
+end;
+$$;
+
+select * from awl_update()
+
+select * from orders
+
+select * from product_infos
+select * from sales
+
+CREATE SEQUENCE sale_id_seq
+MINVALUE 1
+start with 1
+INCREMENT by 1
+
+SELECT * FROM sale_id_seq
+SELECT * FROM s  
+
+create FUNCTION create_sale(p_amount int,sold_price )
+
+
+
+
