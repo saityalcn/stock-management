@@ -1,6 +1,8 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import Siparis from './siparis';
+import Indirimler from './indirimler';
+import AzStok from './stoguazalan';
 import {
   Header,
   Icon,
@@ -12,6 +14,7 @@ import {
   Dropdown,
   Container,
 } from 'semantic-ui-react';
+import MainLayout from './layout';
 
 
 let isim = 'Mehmet Mehmet';
@@ -28,58 +31,22 @@ export default () => {
         type="text/css"
         href="semantic/dist/semantic.min.css"
       ></link>
-      <Menu style={{ backgroundColor: beyaz_gri, margin: '0' }}>
-        <Menu.Item name={sube} />
-        <Menu.Menu position="right">
-          <Menu.Item name={isim} />
+        <MainLayout>
+              <Header as="h2">Stoğu Azalan Ürünler</Header>
+              <AzStok></AzStok>
 
-          <Menu.Item>
-            <Icon name="log out" />
-          </Menu.Item>
-        </Menu.Menu>
-      </Menu>
+              <Header as="h2">İndirimler</Header>
+              {/* <Container fluid> */}
+              <Indirimler></Indirimler>
 
-      <Sidebar.Pushable
-        as={Segment}
-        style={{ backgroundColor: koyu_gri, margin: '0' }}
-      >
-        <Sidebar
-          as={Menu}
-          animation="push"
-          direction="left"
-          icon="labeled"
-          inverted
-          vertical
-          visible
-          width="thin"
-          style={{ backgroundColor: koyu_pembe }}
-        >
-          <Menu.Item as="a" style={{ color: koyu_gri }}>
-            <Icon name="home" />
-            Ana Sayfa
-          </Menu.Item>
-          <Menu.Item as="a" style={{ color: koyu_gri }}>
-            <Icon name="shopping cart" />
-            Şubeler
-          </Menu.Item>
-          <Menu.Item as="a" style={{ color: koyu_gri }}>
-            <Icon name="truck" />
-            Siparişler
-          </Menu.Item>
-        </Sidebar>
+              <Header as="h2">Beklenen Siparişler</Header>
+              <Siparis></Siparis>
 
-        <Sidebar.Pusher>
-          <Segment basic>
-            
-            <Header as="h2">Siparişler</Header>
-            <Siparis></Siparis>
+              {/* </Container> */}
 
-            {/* </Container> */}
+              {/* <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" /> */}
 
-            {/* <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" /> */}
-          </Segment>
-        </Sidebar.Pusher>
-      </Sidebar.Pushable>
+        </MainLayout>
     </div>
   );
 };

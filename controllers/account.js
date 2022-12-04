@@ -23,14 +23,19 @@ module.exports.postLogin = (req, res, next) => {
             return res.send({isAuthenticated: false, message: "Wrong Email"});
         }
     }).catch(err => {
-        res.send({err: true});
+        res.send({error: true});
     });
+}
 
-    /*
-    console.log(req.body);
-    const test = { state: "abc" };
-    console.log(email);
-    console.log(password);
-    return res.json(test);
-    */
+
+module.exports.getCurrentUser = (req,res,next) => {
+    const userId = req.body.userid;
+    console.log(userId);
+    dbHelper.getCurrentUser(userId).then(result => {
+        const currentUser = result.rows[0];
+        console.log(currentUser);
+        res.send(currentUser);
+    }).catch(err => {
+        console.log(err);
+    });
 }

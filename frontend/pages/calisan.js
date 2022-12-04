@@ -9,6 +9,7 @@ import {
   Grid,
   Button,
 } from 'semantic-ui-react';
+import MainLayout from './layout';
 const calisan_ismi = 'Polat ALEMDAR';
 const meslek = 'Temizlikci';
 const sube = 'Akmansoy';
@@ -18,6 +19,7 @@ const izinli_mesaji = 'XXXX Tarihine kadar izinli';
 
 export default () => {
   return (
+    <MainLayout>
     <div>
       <Card centered style={{ marginTop: '3rem' }}>
         <Image
@@ -78,5 +80,6 @@ export default () => {
         <Button negative>Geri Dön</Button>
       </Card>
     </div>
+    </MainLayout>
   );
 };

@@ -28,7 +28,7 @@ const render_siparisler = (siparisler) => {
       const response = await fetch('http://localhost:10500/update-order-state', {method: "POST", headers: myHeaders, body:jsonObject});
       //jsonResponse = await response.json();
       //console.log(jsonResponse);
-      window.location.reload(false);
+      //window.location.reload(false);
       setIsSending(false)
     }, [isSending]);
 
@@ -40,25 +40,21 @@ const render_siparisler = (siparisler) => {
       return (
         <Table.Row>
           <Table.Cell>{siparis.order_id}</Table.Cell>
-          <Table.Cell>{siparis.product_name}</Table.Cell>
-          <Table.Cell>{siparis.amount}</Table.Cell>
           <Table.Cell>{siparis.branch_name}</Table.Cell>
-          <Table.Cell>{siparis.order_date}</Table.Cell>
+          <Table.Cell>{siparis.product_name}</Table.Cell>
+          <Table.Cell>{siparis.stock}</Table.Cell>
           <Table.Cell>{siparis.estimated_shipment_date}</Table.Cell>
-          <Table.Cell>{siparis.order_state}</Table.Cell>
           <Table.Cell>
             <Form onSubmit={sendRequest}>
-              {flag && (
                 <Button
                   fluid
-                  content="Onayla"
+                  content="Sipariş Ver"
                   icon="check circle"
-                  positive
+                  positive  
                   loading={isSending}
                   type='submit'
                   onClick={getOrderId(siparis.order_id)}
                 ></Button>
-              )}
             </Form>
           </Table.Cell>
         </Table.Row>
@@ -86,14 +82,11 @@ function siparis_table(){
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>ID</Table.HeaderCell>
-          <Table.HeaderCell>Ürün</Table.HeaderCell>
-          <Table.HeaderCell>Miktar(adet)</Table.HeaderCell>
           <Table.HeaderCell>Şube</Table.HeaderCell>
-          <Table.HeaderCell>Sipariş Tarihi</Table.HeaderCell>
-          <Table.HeaderCell>Beklenen Teslim Tarihi</Table.HeaderCell>
-          <Table.HeaderCell>Durumu</Table.HeaderCell>
-
-          <Table.HeaderCell> </Table.HeaderCell>
+          <Table.HeaderCell>Ürün</Table.HeaderCell>
+          <Table.HeaderCell>Stok Miktarı</Table.HeaderCell>
+          <Table.HeaderCell>ABCdef</Table.HeaderCell>
+          <Table.HeaderCell>Sipariş Ver</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
 
