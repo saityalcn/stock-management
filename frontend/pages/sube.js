@@ -6,14 +6,6 @@ import MainLayout from './layout';
 import { useRouter } from 'next/router';
 import Layout from './layout';
 
-const koyu_gri = '#D8D9CF';
-const beyaz_gri = '#EDEDED';
-const acik_pembe = '#FF8787';
-const koyu_pembe = '#E26868';
-const sube_ismi = 'Tekerek Sube';
-const address = 'akjdsnjkasdnajkadakjdsnjkasdnajkadakjdsnjkasdnajkad';
-const calisan_sayisi = 10;
-const mudur = 'Mehmet Mehmet';
 const panes = [
   { menuItem: 'Ürünler', render: () => <Tab.Pane>{render_urunler()}</Tab.Pane> },
   { menuItem: 'Çalışanlar', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> },
@@ -65,11 +57,7 @@ const subeler = () => {
     fetch('http://localhost:10500/branches')
       .then((res) => res.json())
       .then((data) => {
-        set_subelerimiz(data);
-        data.map(element => {
-          //subelerimiz .push({branch_id: element.branch_id, branch_name: element.branch_name, branch_address:element.branch_address, branch_manager_pid: element.branch_manager_pid});
-        })
-        console.log(subelerimiz)
+        set_subelerimiz(data.branches);
       })
   }, []);
 
@@ -79,8 +67,6 @@ const subeler = () => {
     </Layout>
   )
   
-  
-
 };
 
 export default subeler;
