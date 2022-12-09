@@ -4,6 +4,8 @@ const jsonParser = require('body-parser').json();
 
 
 router.get('/orders', shopController.getOrders);
+router.get('/beklenen-siparisler', shopController.getUndelieveredOrders);
+router.get('/branches', shopController.getBranches);
 router.get('/employees', shopController.getEmployees);
 router.post('/delete-employee',jsonParser, shopController.deleteEmployee);
 router.post('/update-order-state', shopController.postUpdateOrderState);

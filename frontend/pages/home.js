@@ -16,7 +16,6 @@ import {
 } from 'semantic-ui-react';
 import MainLayout from './layout';
 
-
 let isim = 'Mehmet Mehmet';
 let sube = 'Tekerek sube';
 const koyu_gri = '#D8D9CF';
@@ -31,22 +30,21 @@ export default () => {
         type="text/css"
         href="semantic/dist/semantic.min.css"
       ></link>
-        <MainLayout>
-              <Header as="h2">Stoğu Azalan Ürünler</Header>
-              <AzStok></AzStok>
+      <MainLayout>
+        <Header as="h2">Stoğu Azalan Ürünler</Header>
+        <AzStok></AzStok>
 
-              <Header as="h2">İndirimler</Header>
-              {/* <Container fluid> */}
-              <Indirimler></Indirimler>
+        <Header as="h2">İndirimler</Header>
+        {/* <Container fluid> */}
+        <Indirimler></Indirimler>
 
-              <Header as="h2">Beklenen Siparişler</Header>
-              <Siparis></Siparis>
+        <Header as="h2">Beklenen Siparişler</Header>
+        <Siparis sayfa="beklenen-siparisler"></Siparis>
 
-              {/* </Container> */}
+        {/* </Container> */}
 
-              {/* <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" /> */}
-
-        </MainLayout>
+        {/* <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" /> */}
+      </MainLayout>
     </div>
   );
 };

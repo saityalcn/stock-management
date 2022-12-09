@@ -1,6 +1,6 @@
 import React from 'react';
-import { useState,useCallback } from 'react';
-import {useRouter} from 'next/router';
+import { useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import jsCookie from 'js-cookie';
 import 'semantic-ui-css/semantic.min.css';
 import {
@@ -13,7 +13,7 @@ import {
   Icon,
   Header,
   PopupContent,
-  Message
+  Message,
 } from 'semantic-ui-react';
 const description = 'Lütfen Sistem Yöneticinizle İletişime Geçiniz..';
 const myfunction = () => {
@@ -23,7 +23,7 @@ const myfunction = () => {
 let jsonResponse;
 let wrongInfoError = false;
 let myHeaders = new Headers({
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
 });
 
 function Home() {
@@ -58,12 +58,14 @@ const sendRequest = useCallback(async (event) => {
       <Segment placeholder>
         <Grid columns={2} relaxed="very" stackable>
           <Grid.Column>
-          {wrongInfoError && <Message
-              icon='exclamation circle'
-              header='Şifre veya E-Posta Yanlış'
-              content='Girdiğiniz şifre veya e-posta yanlış. Tekrar deneyiniz'
-              error
-            />}
+            {wrongInfoError && (
+              <Message
+                icon="exclamation circle"
+                header="Şifre veya E-Posta Yanlış"
+                content="Girdiğiniz şifre veya e-posta yanlış. Tekrar deneyiniz"
+                error
+              />
+            )}
             <Form onSubmit={sendRequest}>
               <Form.Input
                 icon="mail"
@@ -80,9 +82,10 @@ const sendRequest = useCallback(async (event) => {
                 type="password"
               />
 
-              <Button primary loading={isSending} fluid type='submit'>Giriş</Button>
+              <Button primary loading={isSending} fluid type="submit">
+                Giriş
+              </Button>
             </Form>
-
           </Grid.Column>
 
           <Grid.Column verticalAlign="middle">
@@ -104,4 +107,4 @@ const sendRequest = useCallback(async (event) => {
   );
 }
 
-export default Home
+export default Home;
