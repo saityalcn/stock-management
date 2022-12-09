@@ -28,7 +28,6 @@ const render_siparisler = (siparisler) => {
       const response = await fetch('http://localhost:10500/update-order-state', {method: "POST", headers: myHeaders, body:jsonObject});
       //jsonResponse = await response.json();
       //console.log(jsonResponse);
-      window.location.reload(false);
       setIsSending(false)
     }, [isSending]);
 

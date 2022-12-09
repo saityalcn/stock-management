@@ -20,10 +20,11 @@ const renderUserNameArea = (name) => {
     return <Header>{name}</Header>
 }
 
+
 export default (props) => {
     const router = useRouter();
     useEffect(() => {
-        const jsonObject = JSON.stringify({userid: 2});
+        const jsonObject = JSON.stringify({userid: 1});
         console.log(jsonObject);
         fetch('http://localhost:10500/account/current-user', {method: "POST", headers: myHeaders, body:jsonObject})
           .then((res) => res.json())
@@ -67,7 +68,7 @@ export default (props) => {
                 <Icon name="shopping cart" />
                 Şubeler
             </Menu.Item>
-            <Menu.Item as="a" style={{ color: koyu_gri }} onClick={() => {router.push('/calisan');}}>
+            <Menu.Item as="a" style={{ color: koyu_gri }} onClick={() => {router.push('/calisanlar');}}>
                 <Icon name="id badge" />
                 Çalışanlar
             </Menu.Item>
@@ -75,10 +76,12 @@ export default (props) => {
                 <Icon name="truck" />
                 Siparişler
             </Menu.Item>
+            {/*
             <Menu.Item as='a' style={{ color: koyu_gri }} onClick={() => {router.push('/subeler');}}>
                 <Icon name="clipboard list" />
                     Satışlar
             </Menu.Item>
+            */}
             </Sidebar>
                 <Sidebar.Pusher>
                     <Segment basic>

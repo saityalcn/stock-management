@@ -1,8 +1,19 @@
 const dbHelper = require('../data/DbHelper');
 
-module.exports.getIndex = (req, res, next) => {
-    dbHelper.getEmployees().then(result => {
-        res.send(result.rows);
+module.exports.getEmployees = (req, res, next) => {
+    dbHelper.getEmployeesWithBranches().then(result => {
+        const data = result.rows.map(element => formatEmployee(element));
+        console.log(data);
+        res.send(data);
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+module.exports.deleteEmployee = (req,res,next) => {
+    const employeeId = req.body.employeeid;
+    dbHelper.deleteEmployeeById(employeeId).then(result => {
+        res.send(result);
     }).catch(err => {
         console.log(err);
     });
@@ -38,5 +49,18 @@ function formatOrder(element){
         order_date:element.order_date.toLocaleDateString("tr-TR"),
         estimated_shipment_date: element.estimated_shipment_date.toLocaleDateString("tr-TR"),
         order_state: element.order_state
+    }
+}
+
+function formatEmployee(element) {
+    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const formatter = new Intl.NumberFormat('tr-TR', {style: 'currency',currency: 'TRY',});
+    return {
+        employee_id: element.employee_id,
+        employee_name: element.employee_name,
+        employee_salary: formatter.format(element.employee_salary),
+        awl: element.awl,
+        awl_date: element.awl_date.toLocaleDateString("tr-TR",options),
+        branch_name: element.branch_name
     }
 }

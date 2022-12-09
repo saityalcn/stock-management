@@ -1,5 +1,4 @@
 const dbHelper = require('../data/DbHelper');
-const bcrypt = require('bcrypt');
 
 
 module.exports.postLogin = (req, res, next) => {
