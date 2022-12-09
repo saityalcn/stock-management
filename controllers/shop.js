@@ -18,6 +18,26 @@ module.exports.getOrders = (req, res, next) => {
         console.log(err);
     })
 }
+module.exports.getBranches = (req, res, next) => {
+    dbHelper.getBranches().then(result => {
+        const branches = result.rows; 
+        console.log(branches);
+        res.send(branches);
+    }).catch(err => {
+        console.log(err);
+    })
+}
+module.exports.getBranch = (req, res, next) => {
+    const branchId = req.params.branchid;
+    dbHelper.getBranchById(branchId).then(result => {
+
+        const branch = result.rows[0]; 
+        console.log(branch);
+        res.send(branch);
+    }).catch(err => {
+        console.log(err);
+    })
+}
 
 module.exports.postUpdateOrderState = (req,res,next) => {
     const orderId = req.body.orderid;
