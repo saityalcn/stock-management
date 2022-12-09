@@ -5,7 +5,7 @@ module.exports.initDb = () => {
   client = new Client({
     user: 'postgres',
     host: '127.0.0.1',
-    database: 'stock_management',
+    database: 'stock-management',
     port: '5432',
     password: 'aag',
   });
@@ -41,7 +41,7 @@ module.exports.findEmployeeByEmail = (email) => {
 
 module.exports.getEmployeesWithBranches = () => {
   const queryText = 'select * from employees, branches where branches.branch_id=employees.branch_id';
-  return client.query();
+  return client.query(queryText);
 };
 
 module.exports.deleteEmployeeById = (employeeId) => {

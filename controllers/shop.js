@@ -33,16 +33,6 @@ module.exports.getOrders = (req, res, next) => {
     });
 };
 
-module.exports.getBranches = (req, res, next) => {
-    dbHelper.getBranches().then(result => {
-        const branches = result.rows; 
-        console.log(branches);
-        res.send(branches);
-    }).catch(err => {
-        console.log(err);
-    })
-}
-
 module.exports.getBranch = (req, res, next) => {
     const branchId = req.params.branchid;
     dbHelper.getBranchById(branchId).then(result => {
