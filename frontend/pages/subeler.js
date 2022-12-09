@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { use, useState } from 'react';
 import 'semantic-ui-css/semantic.min.css';
+import { useEffect } from 'react'
 import { Grid, Segment, Card, Image, Button, Menu, Icon } from 'semantic-ui-react';
-import { useState, useEffect } from 'react';
 import MainLayout from './layout';
+import { useRouter } from 'next/router';
 
 const koyu_gri = '#D8D9CF';
 const beyaz_gri = '#EDEDED';
@@ -12,31 +13,14 @@ const sube_ismi = 'Tekerek Sube';
 const address = 'akjdsnjkasdnajkadakjdsnjkasdnajkadakjdsnjkasdnajkad';
 const calisan_sayisi = 10;
 const mudur = 'Mehmet Mehmet';
-const subelerimiz = [
-  {
-    branch_name: 'Tekerek Sube',
-    branch_address: 'Haydar Bey Mah. ',
-    calisan_sayisi: 5,
-    mudur: 'Basel',
-  },
-  {
-    branch_name: 'Bin Evler Sube',
-    branch_address: 'BinEVler  Bey Mah. ',
-    calisan_sayisi: 5,
-    mudur: 'Basel',
-  },
-  {
-    branch_name: 'Carsi Sube',
-    branch_address: 'Trabzon Caddesi Bey Mah. ',
-    calisan_sayisi: 5,
-    mudur: 'Basel',
-  },
-];
+
 
 const render_subeler = (subelerimiz) => {
+  const router = useRouter();
   return subelerimiz.map((sube) => {
+    console.log(sube)
     return (
-      <Card>
+      <Card onClick={()=>{router.push({pathname: 'sube', query: {branch_id: sube.branch_id}});}}>
         <Card.Content>
           <Image
             floated="right"
@@ -49,8 +33,8 @@ const render_subeler = (subelerimiz) => {
             {`Konum: ${sube.branch_address}`}
           </Card.Description>
 
-          <Card.Description>{`Çalışan Kişi Sayısı: ${sube.calisan_sayisi}`}</Card.Description>
-          <Card.Description>{`Şubenin Müdür: ${sube.mudur} `}</Card.Description>
+          <Card.Description>{`Çalışan Kişi Sayısı: ${sube.branch_manager_pid}`}</Card.Description>
+          <Card.Description>{`Şubenin Müdür İsmi: ${sube.employee_name} `}</Card.Description>
         </Card.Content>
       </Card>
     );
@@ -58,6 +42,19 @@ const render_subeler = (subelerimiz) => {
 };
 
 const subeler = () => {
+ const [subelerimiz, set_subelerimiz] = useState([]); 
+  useEffect(() => {
+    fetch('http://localhost:10500/branches')
+      .then((res) => res.json())
+      .then((data) => {
+        set_subelerimiz(data);
+        data.map(element => {
+          //subelerimiz .push({branch_id: element.branch_id, branch_name: element.branch_name, branch_address:element.branch_address, branch_manager_pid: element.branch_manager_pid});
+        })
+        console.log(subelerimiz)
+      })
+  }, []);
+
   return  <MainLayout>
             <Card.Group>{render_subeler(subelerimiz)}</Card.Group>
           </MainLayout>;
