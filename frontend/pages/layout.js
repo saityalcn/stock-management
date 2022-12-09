@@ -19,6 +19,7 @@ const renderUserNameArea = (name) => {
   return <Header>{name}</Header>;
 };
 
+
 export default (props) => {
   const router = useRouter();
   useEffect(() => {

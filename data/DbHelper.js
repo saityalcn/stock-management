@@ -5,9 +5,9 @@ module.exports.initDb = () => {
   client = new Client({
     user: 'postgres',
     host: '127.0.0.1',
-    database: 'stock-management',
+    database: 'stock_management',
     port: '5432',
-    password: '1612',
+    password: 'aag',
   });
 
   return client.connect();
@@ -29,7 +29,8 @@ module.exports.updateOrderState = (orderId) => {
 
 // Employee
 module.exports.getEmployees = () => {
-  return client.query('select * from employees');
+  const queryText = "select * from employees"
+  return client.query(queryText);
 };
 
 module.exports.findEmployeeByEmail = (email) => {
@@ -37,6 +38,17 @@ module.exports.findEmployeeByEmail = (email) => {
   const values = [email];
   return client.query(queryText, values);
 };
+
+module.exports.getEmployeesWithBranches = () => {
+  const queryText = 'select * from employees, branches where branches.branch_id=employees.branch_id';
+  return client.query();
+};
+
+module.exports.deleteEmployeeById = (employeeId) => {
+  const queryText = "delete from employee where employee_id=$1";
+  const values = [employeeId];
+  return client.query(queryText, values);
+}
 
 module.exports.getCurrentUser = (employeeId) => {
   const queryText = 'select * from employees where employee_id=$1';
@@ -55,3 +67,18 @@ module.exports.getBranches = () => {
     'select br.branch_id, br.branch_address, br.branch_manager_pid,emp.employee_name ,br.branch_name, count(*) number_of_employees from branches as br ,employees as emp where  br.branch_manager_pid = emp.employee_id group by br.branch_id, br.branch_manager_pid,br.branch_address,br.branch_name,emp.employee_name';
   return client.query(queryText);
 };
+
+module.exports.getBranchById = (branchId) => {
+  const queryText = "select br.branch_id, br.branch_address, br.branch_manager_pid, emp.employee_name ,br.branch_name, count(*) number_of_employees from branches as br ,employees as emp where br.branch_id = $1 and br.branch_manager_pid = emp.employee_id group by br.branch_id, br.branch_manager_pid,br.branch_address,br.branch_name,emp.employee_name"
+  const values = [branchId];
+  return client.query(queryText,values);
+}
+module.exports.getBranches = () => {
+  const queryText = "select br.branch_id, br.branch_address, br.branch_manager_pid,emp.employee_name ,br.branch_name, count(*) number_of_employees from branches as br ,employees as emp where  br.branch_manager_pid = emp.employee_id group by br.branch_id, br.branch_manager_pid,br.branch_address,br.branch_name,emp.employee_name"
+  return client.query(queryText);
+}
+module.exports.getBranchById = (branchId) => {
+  const queryText = "select br.branch_id, br.branch_address, br.branch_manager_pid, emp.employee_name ,br.branch_name, count(*) number_of_employees from branches as br ,employees as emp where br.branch_id = $1 and br.branch_manager_pid = emp.employee_id group by br.branch_id, br.branch_manager_pid,br.branch_address,br.branch_name,emp.employee_name"
+  const values = [branchId];
+  return client.query(queryText,values);
+}

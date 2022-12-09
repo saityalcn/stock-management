@@ -1,15 +1,24 @@
 const dbHelper = require('../data/DbHelper');
 
-module.exports.getIndex = (req, res, next) => {
-  dbHelper
-    .getEmployees()
-    .then((result) => {
-      res.send(result.rows);
-    })
-    .catch((err) => {
-      console.log(err);
+
+module.exports.getEmployees = (req, res, next) => {
+    dbHelper.getEmployeesWithBranches().then(result => {
+        const data = result.rows.map(element => formatEmployee(element));
+        console.log(data);
+        res.send(data);
+    }).catch(err => {
+        console.log(err);
     });
-};
+}
+
+module.exports.deleteEmployee = (req,res,next) => {
+    const employeeId = req.body.employeeid;
+    dbHelper.deleteEmployeeById(employeeId).then(result => {
+        res.send(result);
+    }).catch(err => {
+        console.log(err);
+    });
+}
 
 module.exports.getOrders = (req, res, next) => {
   dbHelper
@@ -19,11 +28,32 @@ module.exports.getOrders = (req, res, next) => {
         orders: result.rows.map((element) => formatOrder(element)),
       };
       res.send(map);
-    })
-    .catch((err) => {
+    }).catch((err) => {
       console.log(err);
     });
 };
+
+module.exports.getBranches = (req, res, next) => {
+    dbHelper.getBranches().then(result => {
+        const branches = result.rows; 
+        console.log(branches);
+        res.send(branches);
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
+module.exports.getBranch = (req, res, next) => {
+    const branchId = req.params.branchid;
+    dbHelper.getBranchById(branchId).then(result => {
+
+        const branch = result.rows[0]; 
+        console.log(branch);
+        res.send(branch);
+    }).catch(err => {
+        console.log(err);
+    })
+}
 
 module.exports.getBranches = (req, res) => {
   dbHelper
@@ -52,7 +82,6 @@ module.exports.postUpdateOrderState = (req, res, next) => {
 };
 
 module.exports.getUndelieveredOrders = (req, res) => {
-  console.log('ndsjad');
   dbHelper
     .getUndelieveredOrders()
     .then((result) => {
@@ -65,6 +94,7 @@ module.exports.getUndelieveredOrders = (req, res) => {
       console.log(err);
     });
 };
+
 
 function formatOrder(element) {
   return {
@@ -86,4 +116,17 @@ function formatBranch(element) {
     branch_address: element.branch_address,
     employee_name: element.employee_name,
   };
+}
+
+function formatEmployee(element) {
+    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const formatter = new Intl.NumberFormat('tr-TR', {style: 'currency',currency: 'TRY',});
+    return {
+        employee_id: element.employee_id,
+        employee_name: element.employee_name,
+        employee_salary: formatter.format(element.employee_salary),
+        awl: element.awl,
+        awl_date: element.awl_date.toLocaleDateString("tr-TR",options),
+        branch_name: element.branch_name
+    }
 }

@@ -32,7 +32,6 @@ export const render_siparisler = (siparisler) => {
       );
       //jsonResponse = await response.json();
       //console.log(jsonResponse);
-
       setIsSending(false);
     },
     [isSending]
