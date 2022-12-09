@@ -37,6 +37,17 @@ module.exports.findEmployeeByEmail = (email) => {
     return client.query(queryText,values);
 }
 
+module.exports.getEmployeesWithBranches = () => {
+  const queryText = 'select * from employees, branches where branches.branch_id=employees.branch_id';
+  return client.query();
+};
+
+module.exports.deleteEmployeeById = (employeeId) => {
+  const queryText = "delete from employee where employee_id=$1";
+  const values = [employeeId];
+  return client.query(queryText, values);
+}
+
 module.exports.getCurrentUser = (employeeId) => {
     const queryText = "select * from employees where employee_id=$1"
     const values = [employeeId];
