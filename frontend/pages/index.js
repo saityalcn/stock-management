@@ -1,6 +1,6 @@
 import React from 'react';
-import { useState,useCallback } from 'react';
-import {useRouter} from 'next/router';
+import { useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import jsCookie from 'js-cookie';
 import 'semantic-ui-css/semantic.min.css';
 import {
@@ -13,7 +13,7 @@ import {
   Icon,
   Header,
   PopupContent,
-  Message
+  Message,
 } from 'semantic-ui-react';
 const description = 'Lütfen Sistem Yöneticinizle İletişime Geçiniz..';
 const myfunction = () => {
@@ -23,32 +23,36 @@ const myfunction = () => {
 let jsonResponse;
 let wrongInfoError = false;
 let myHeaders = new Headers({
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
 });
 
-function Home() {
-  const [isSending, setIsSending] = useState(false);
-  const router = useRouter();
-  const sendRequest = useCallback(async (event) => {
-    if (isSending) return
+const [isSending, setIsSending] = useState(false);
+const router = useRouter();
+const sendRequest = useCallback(
+  async (event) => {
+    if (isSending) return;
     setIsSending(true);
     const email = event.target.email.value;
     const password = event.target.password.value;
-    const jsonObject = JSON.stringify({email: email, password: password});
-    const response = await fetch('http://localhost:10500/account/log-in', {method: "POST", headers: myHeaders, body:jsonObject});
+    const jsonObject = JSON.stringify({ email: email, password: password });
+    const response = await fetch('http://localhost:10500/account/log-in', {
+      method: 'POST',
+      headers: myHeaders,
+      body: jsonObject,
+    });
     jsonResponse = await response.json();
     console.log(jsonResponse);
-    if(jsonResponse.isAuthenticated === true){
+    if (jsonResponse.isAuthenticated === true) {
       jsCookie.set('token', jsonResponse.userId);
       return router.push('/home');
-    }
-    else
-      wrongInfoError = true;
-    
-    setIsSending(false)
-  }, [isSending]);
+    } else wrongInfoError = true;
 
-  
+    setIsSending(false);
+  },
+  [isSending]
+);
+
+function Home() {
   return (
     <div>
       <link
@@ -59,12 +63,14 @@ function Home() {
       <Segment placeholder>
         <Grid columns={2} relaxed="very" stackable>
           <Grid.Column>
-          {wrongInfoError && <Message
-              icon='exclamation circle'
-              header='Şifre veya E-Posta Yanlış'
-              content='Girdiğiniz şifre veya e-posta yanlış. Tekrar deneyiniz'
-              error
-            />}
+            {wrongInfoError && (
+              <Message
+                icon="exclamation circle"
+                header="Şifre veya E-Posta Yanlış"
+                content="Girdiğiniz şifre veya e-posta yanlış. Tekrar deneyiniz"
+                error
+              />
+            )}
             <Form onSubmit={sendRequest}>
               <Form.Input
                 icon="mail"
@@ -81,9 +87,10 @@ function Home() {
                 type="password"
               />
 
-              <Button primary loading={isSending} fluid type='submit'>Giriş</Button>
+              <Button primary loading={isSending} fluid type="submit">
+                Giriş
+              </Button>
             </Form>
-
           </Grid.Column>
 
           <Grid.Column verticalAlign="middle">
@@ -105,4 +112,4 @@ function Home() {
   );
 }
 
-export default Home
+export default Home;
