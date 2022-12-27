@@ -4,7 +4,6 @@ const dbHelper = require('../data/DbHelper');
 module.exports.getEmployees = (req, res, next) => {
     dbHelper.getEmployeesWithBranches().then(result => {
         const data = result.rows.map(element => formatEmployee(element));
-        console.log(data);
         res.send(data);
     }).catch(err => {
         console.log(err);
@@ -33,12 +32,39 @@ module.exports.getOrders = (req, res, next) => {
     });
 };
 
+module.exports.getProductsWithInfos = (req, res, next) => {
+  const branch_id = req.params.branchid;
+  dbHelper
+    .getProductsWithInfos(branch_id)
+    .then((result) => {
+      console.log(result.rows);
+      const map = {
+        products_with_infos: result.rows.map(element=>formatProduct(element))
+      };
+      res.send(map);
+    }).catch((err) => {
+      console.log(err);
+    });
+};
+module.exports.getEmployeesFromBranch = (req, res, next) => {
+  const branch_id = req.params.branchid;
+  dbHelper
+    .getEmployeesFromBranch(branch_id)
+    .then((result) => {
+      const map = {
+        employees_from_branch: result.rows.map(element=>formatEmployee(element))
+      };
+      res.send(map);
+    }).catch((err) => {
+      console.log(err);
+    });
+};
+
 module.exports.getBranch = (req, res, next) => {
     const branchId = req.params.branchid;
     dbHelper.getBranchById(branchId).then(result => {
 
         const branch = result.rows[0]; 
-        console.log(branch);
         res.send(branch);
     }).catch(err => {
         console.log(err);
@@ -115,8 +141,19 @@ function formatEmployee(element) {
         employee_id: element.employee_id,
         employee_name: element.employee_name,
         employee_salary: formatter.format(element.employee_salary),
-        awl: element.awl,
-        awl_date: element.awl_date.toLocaleDateString("tr-TR",options),
+        awl: (element.awl == false) ? "İzinli Değil":"İzinli",
+        awl_date: (element.awl_date == undefined ) ? "Yok":element.awl_date.toLocaleDateString("tr-TR",options),
         branch_name: element.branch_name
     }
+}
+function formatProduct(element) {
+  var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const formatter = new Intl.NumberFormat('tr-TR', {style: 'currency',currency: 'TRY',});
+  return {
+      products_id: element.products_id,
+      product_name: element.product_name,
+      product_price: formatter.format(element.product_price),
+      product_skt: element.product_skt.toLocaleDateString("tr-TR",options),
+      product_stock: element.product_stock
+  }
 }

@@ -11,5 +11,8 @@ router.post('/delete-employee',jsonParser, shopController.deleteEmployee);
 router.post('/update-order-state', shopController.postUpdateOrderState);
 router.get('/branches',shopController.getBranches );
 router.get('/branches/:branchid',shopController.getBranch );
+router.get('/branch/products/:branchid',shopController.getProductsWithInfos);
+router.get('/branch/employees/:branchid',shopController.getEmployeesFromBranch);
+
 
 module.exports = router;
