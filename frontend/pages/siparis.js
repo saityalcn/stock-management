@@ -42,6 +42,7 @@ export const render_siparisler = (siparisler) => {
     if (siparis.order_state === 'Teslim Edildi') {
       flag = false;
     }
+    console.log(siparis);
     return (
       <Table.Row>
         <Table.Cell>{siparis.order_id}</Table.Cell>
@@ -81,6 +82,7 @@ function siparis_table(props) {
     if (sayfa === 'orders') {
       setInOrders(true);
     }
+
     setLoading(true);
     fetch(`http://localhost:10500/${sayfa}`)
       .then((res) => res.json())
@@ -88,6 +90,8 @@ function siparis_table(props) {
         setData(orderId);
         orders = data.orders;
         setLoading(false);
+        console.log(inOrders);
+        console.log(orders);
       });
   }, [orders]);
 
