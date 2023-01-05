@@ -1,7 +1,7 @@
 import React, { use, useState } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { useEffect } from 'react'
-import { Grid, Segment, Card, Image, Button, Menu, Icon, Tab, Label, Table } from 'semantic-ui-react';
+import { Grid, Segment, Card, Image, Button, Menu, Icon, Tab, Label, Table, Item } from 'semantic-ui-react';
 import MainLayout from './layout';
 import { useRouter } from 'next/router';
 import Layout from './layout';
@@ -10,9 +10,27 @@ let urunler = [];
 let calisanlar = [];
 
 const panes = [
+  { menuItem: 'Şube Bilgileri', render: () => <Tab.Pane>{render_sube_bilgisi()} </Tab.Pane> },
   { menuItem: 'Ürünler', render: () => <Tab.Pane>{render_urunler()}</Tab.Pane> },
   { menuItem: 'Çalışanlar', render: () => <Tab.Pane>{render_calisanlar()}</Tab.Pane> },
 ];
+
+const render_sube_bilgisi = ()=>{
+  return (<Item.Group>
+    <Item>
+      <Item.Image size='tiny' src='/images/wireframe/image.png' />
+
+      <Item.Content>
+        <Item.Header as='a'>Header</Item.Header>
+        <Item.Meta>Description</Item.Meta>
+        <Item.Description>
+          <Image src='/images/wireframe/short-paragraph.png' />
+        </Item.Description>
+        <Item.Extra>Additional Details</Item.Extra>
+      </Item.Content>
+    </Item>
+  </Item.Group>)
+}
 
 const render_urunler = () => {
 
