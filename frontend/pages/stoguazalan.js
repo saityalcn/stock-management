@@ -3,6 +3,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { Table, Button, Form, Visibility } from 'semantic-ui-react';
 import { useEffect } from 'react';
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
 
 let orders = [];
 let orderId;
@@ -19,39 +20,18 @@ const getOrderId = (selectedOrderId) => {
 
 const render_siparisler = (siparisler) => {
   const [isSending, setIsSending] = useState(false);
-
-  const sendRequest = useCallback(
-    async (event) => {
-      if (isSending) return;
-      setIsSending(true);
-      const jsonObject = JSON.stringify({ orderid: orderId });
-      console.log(jsonObject);
-      const response = await fetch(
-        'http://localhost:10500/update-order-state',
-        { method: 'POST', headers: myHeaders, body: jsonObject }
-      );
-      //jsonResponse = await response.json();
-      //console.log(jsonResponse);
-      //window.location.reload(false);
-      setIsSending(false);
-    },
-    [isSending]
-  );
+  const router = useRouter();
 
   return siparisler.map((siparis) => {
-    let flag = true;
-    if (siparis.order_state === 'Teslim Edildi') {
-      flag = false;
-    }
     return (
       <Table.Row>
-        <Table.Cell>{siparis.order_id}</Table.Cell>
+        <Table.Cell>{siparis.products_id}</Table.Cell>
         <Table.Cell>{siparis.branch_name}</Table.Cell>
         <Table.Cell>{siparis.product_name}</Table.Cell>
-        <Table.Cell>{siparis.stock}</Table.Cell>
-        <Table.Cell>{siparis.estimated_shipment_date}</Table.Cell>
+        <Table.Cell>{siparis.product_stock}</Table.Cell>
+        <Table.Cell>{siparis.product_price}</Table.Cell>
         <Table.Cell>
-          <Form onSubmit={sendRequest}>
+          <Form>
             <Button
               fluid
               content="Sipariş Ver"
@@ -59,7 +39,7 @@ const render_siparisler = (siparisler) => {
               positive
               loading={isSending}
               type="submit"
-              onClick={getOrderId(siparis.order_id)}
+              onClick={() => {router.push('/siparis_ver');}}
             ></Button>
           </Form>
         </Table.Cell>
@@ -74,11 +54,11 @@ function siparis_table() {
 
   useEffect(() => {
     setLoading(true);
-    fetch('http://localhost:10500/orders')
+    fetch('http://localhost:10500/least-stock-products')
       .then((res) => res.json())
       .then((data) => {
         setData(orderId);
-        orders = data.orders;
+        orders = data;
         setLoading(false);
       });
   }, [orders]);
@@ -91,8 +71,8 @@ function siparis_table() {
           <Table.HeaderCell>Şube</Table.HeaderCell>
           <Table.HeaderCell>Ürün</Table.HeaderCell>
           <Table.HeaderCell>Stok Miktarı</Table.HeaderCell>
-          <Table.HeaderCell>ABCdef</Table.HeaderCell>
-          <Table.HeaderCell>Sipariş Ver</Table.HeaderCell>
+          <Table.HeaderCell>Fiyat</Table.HeaderCell>
+          <Table.HeaderCell>SKT</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
 

@@ -4,15 +4,24 @@ const dbHelper = require('../data/DbHelper');
 module.exports.getEmployees = (req, res, next) => {
     dbHelper.getEmployeesWithBranches().then(result => {
         const data = result.rows.map(element => formatEmployee(element));
-        console.log(data);
         res.send(data);
     }).catch(err => {
         console.log(err);
     });
 }
 
+module.exports.postAddEmployee = (req, res,next) => {
+    const employee = req.body;
+    dbHelper.addEmployee(employee).then(result => {
+      res.send(result);
+    }).catch(err => {
+      console.log(err);
+    })
+}
+
 module.exports.deleteEmployee = (req,res,next) => {
     const employeeId = req.body.employeeid;
+    console.log(employeeId);
     dbHelper.deleteEmployeeById(employeeId).then(result => {
         res.send(result);
     }).catch(err => {
@@ -36,9 +45,7 @@ module.exports.getOrders = (req, res, next) => {
 module.exports.getBranch = (req, res, next) => {
     const branchId = req.params.branchid;
     dbHelper.getBranchById(branchId).then(result => {
-
         const branch = result.rows[0]; 
-        console.log(branch);
         res.send(branch);
     }).catch(err => {
         console.log(err);
@@ -64,7 +71,7 @@ module.exports.postUpdateOrderState = (req, res, next) => {
   dbHelper
     .updateOrderState(orderId)
     .then((result) => {
-      res.send();
+      res.send(result);
     })
     .catch((err) => {
       console.log(err);
@@ -84,6 +91,20 @@ module.exports.getUndelieveredOrders = (req, res) => {
       console.log(err);
     });
 };
+
+module.exports.setAwl = (req,res,next) => {
+  const employeeId = req.body.employeeId; 
+  const date = req.body.awl_date;
+  dbHelper.setAwlForEmployee(employeeId, date).then(result => {
+    res.send(result);
+  }).catch(err => {
+    console.log(err);
+  })
+}
+
+module.exports.getLeastStockProducts = (req,res,next) => {
+  dbHelper.getLeastStockProducts().then(result => res.send(result.rows)).catch(err => console.log(err));
+}
 
 
 function formatOrder(element) {
@@ -116,7 +137,7 @@ function formatEmployee(element) {
         employee_name: element.employee_name,
         employee_salary: formatter.format(element.employee_salary),
         awl: element.awl,
-        awl_date: element.awl_date.toLocaleDateString("tr-TR",options),
+        awl_date: (element.awl_date == undefined) ? "İzinli Değil" : element.awl_date.toLocaleDateString("tr-TR",options),
         branch_name: element.branch_name
     }
 }

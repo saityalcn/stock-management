@@ -3,14 +3,12 @@ import 'semantic-ui-css/semantic.min.css';
 import { Table, Button, Form, Tab, Icon, Card,Modal, Header, Image, Grid, Container } from 'semantic-ui-react';
 import { useEffect } from 'react'
 import { useState,useCallback } from 'react';
-import Calisan from './calisan';
 import { useRouter } from 'next/router';
 
 
 let calisanlar = [];
 let orderId;
 let interval;
-let secilen_tarih;
 
 var secilen_calisan = {};
 const myHeaders = new Headers({
@@ -60,16 +58,14 @@ const render_calisan_detay = () => {
     );
 }
 
-let sendSetAwlRequest;
-
 const render_calisan_islemler = () => {
   return(
     <Tab.Pane>
         <Container>
-        <Form onSubmit={sendSetAwlRequest}>
+        <Form>
           <Form.Group widths='equal'>
             <Container>
-              <Container><Form.Input type='date' name="dateawl" label='İzin Bitiş'/></Container>
+              <Container><Form.Input type='date' label='İzin Bitiş'/></Container>
               <Card><Button type='submit' primary>İzin Ver</Button></Card>
             </Container>
           </Form.Group>
@@ -90,6 +86,7 @@ const render_calisanlar = (calisanlar) => {
       const response = await fetch('http://localhost:10500/delete-employee', {method: "POST", headers: myHeaders, body:jsonObject});
       //jsonResponse = await response.json();
       //console.log(jsonResponse);
+      window.location.reload(false);
       setIsSending(false)
     }, [isSending]);
 
@@ -134,6 +131,8 @@ const render_calisanlar = (calisanlar) => {
             <Table.Cell>
             <Button inverted color='red' onClick={() => {
                 silinecek_calisan_id = calisan.employee_id;
+                console.log(silinecek_calisan_id);
+                console.log("Silll");
                 sendRequest();
               }}>
                 <Icon name='remove' />
@@ -159,16 +158,6 @@ function siparis_table(){
         setLoading(false)
       })
   }, [calisanlar]);
-
-  sendSetAwlRequest = useCallback(async (event) => {
-    const awlDate = event.target.dateawl.value;
-    const jsonObject = JSON.stringify({employeeId: secilen_calisan.employee_id,awl_date: awlDate});
-    console.log(jsonObject);
-    const responseAwl = await fetch('http://localhost:10500/employee/set-awl', {method: "POST", headers: myHeaders, body:jsonObject});
-    const jsonResponseAwl = await responseAwl.json();
-    window.location.reload(false);
-    setIsSending(false)
-  }, []);
   
   return (
     <Table unstackable padded>
