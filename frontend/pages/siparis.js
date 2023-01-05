@@ -11,7 +11,7 @@ const myHeaders = new Headers({
   'Content-Type': 'application/json',
 });
 
-//TODO siparis gelirse o satiri disable edip yesile boya,
+//TODO: siparis gelirse o satiri disable edip yesile boya,
 
 const getOrderId = (selectedOrderId) => {
   orderId = selectedOrderId;
@@ -25,7 +25,7 @@ export const render_siparisler = (siparisler) => {
       if (isSending) return;
       setIsSending(true);
       const jsonObject = JSON.stringify({ orderid: orderId });
-      console.log(jsonObject);
+      //console.log(jsonObject);
       const response = await fetch(
         'http://localhost:10500/update-order-state',
         { method: 'POST', headers: myHeaders, body: jsonObject }
@@ -42,6 +42,7 @@ export const render_siparisler = (siparisler) => {
     if (siparis.order_state === 'Teslim Edildi') {
       flag = false;
     }
+    console.log(siparis);
     return (
       <Table.Row>
         <Table.Cell>{siparis.order_id}</Table.Cell>
@@ -81,6 +82,7 @@ function siparis_table(props) {
     if (sayfa === 'orders') {
       setInOrders(true);
     }
+
     setLoading(true);
     fetch(`http://localhost:10500/${sayfa}`)
       .then((res) => res.json())
@@ -88,6 +90,8 @@ function siparis_table(props) {
         setData(orderId);
         orders = data.orders;
         setLoading(false);
+        console.log(inOrders);
+        console.log(orders);
       });
   }, [orders]);
 

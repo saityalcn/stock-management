@@ -9,7 +9,6 @@ import { useRouter } from 'next/router';
 const render_subeler = (subelerimiz) => {
   const router = useRouter();
   return subelerimiz.map((sube) => {
-    console.log(sube)
     return (
       <Card onClick={()=>{router.push({pathname: 'sube', query: {branch_id: sube.branch_id}});}}>
         <Card.Content>

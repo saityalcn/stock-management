@@ -42,6 +42,34 @@ module.exports.getOrders = (req, res, next) => {
     });
 };
 
+module.exports.getProductsWithInfos = (req, res, next) => {
+  const branch_id = req.params.branchid;
+  dbHelper
+    .getProductsWithInfos(branch_id)
+    .then((result) => {
+      console.log(result.rows);
+      const map = {
+        products_with_infos: result.rows.map(element=>formatProduct(element))
+      };
+      res.send(map);
+    }).catch((err) => {
+      console.log(err);
+    });
+};
+module.exports.getEmployeesFromBranch = (req, res, next) => {
+  const branch_id = req.params.branchid;
+  dbHelper
+    .getEmployeesFromBranch(branch_id)
+    .then((result) => {
+      const map = {
+        employees_from_branch: result.rows.map(element=>formatEmployee(element))
+      };
+      res.send(map);
+    }).catch((err) => {
+      console.log(err);
+    });
+};
+
 module.exports.getBranch = (req, res, next) => {
     const branchId = req.params.branchid;
     dbHelper.getBranchById(branchId).then(result => {
@@ -107,6 +135,28 @@ module.exports.getLeastStockProducts = (req,res,next) => {
 }
 
 
+module.exports.getProductsInfo = (req, res) => {
+  dbHelper
+    .getProductsInfo()
+    .then((result) => {
+      res.send(result.rows);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+module.exports.addOrder = (req, res) => {
+  dbHelper
+    .addOrder(req.body)
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 function formatOrder(element) {
   return {
     order_id: element.order_id,
@@ -114,8 +164,10 @@ function formatOrder(element) {
     amount: element.amount,
     branch_name: element.branch_name,
     order_date: element.order_date.toLocaleDateString('tr-TR'),
-    estimated_shipment_date:
-      element.estimated_shipment_date.toLocaleDateString('tr-TR'),
+
+    estimated_shipment_date: element.estimated_shipment_date
+      ? element.estimated_shipment_date.toLocaleDateString('tr-TR')
+      : '',
     order_state: element.order_state,
   };
 }
@@ -136,8 +188,19 @@ function formatEmployee(element) {
         employee_id: element.employee_id,
         employee_name: element.employee_name,
         employee_salary: formatter.format(element.employee_salary),
-        awl: element.awl,
-        awl_date: (element.awl_date == undefined) ? "İzinli Değil" : element.awl_date.toLocaleDateString("tr-TR",options),
+        awl: (element.awl == false) ? "İzinli Değil":"İzinli",
+        awl_date: (element.awl_date == undefined ) ? "Yok":element.awl_date.toLocaleDateString("tr-TR",options),
         branch_name: element.branch_name
     }
+}
+function formatProduct(element) {
+  var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const formatter = new Intl.NumberFormat('tr-TR', {style: 'currency',currency: 'TRY',});
+  return {
+      products_id: element.products_id,
+      product_name: element.product_name,
+      product_price: formatter.format(element.product_price),
+      product_skt: element.product_skt.toLocaleDateString("tr-TR",options),
+      product_stock: element.product_stock
+  }
 }

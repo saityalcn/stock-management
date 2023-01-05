@@ -58,21 +58,34 @@ module.exports.getCurrentUser = (employeeId) => {
 
 module.exports.getUndelieveredOrders = () => {
   const queryText =
-    "select * from orders where order_state = 'Teslim Edilmedi'";
+    "select order_id, product_name, amount,branch_name,order_date,estimated_shipment_date,order_state from orders, product_infos, branches where product_infos.info_id = orders.product_id AND branches.branch_id = orders.branch_id and order_state = 'Teslim Edilmedi' ";
   return client.query(queryText);
 };
 
-module.exports.getBranches = () => {
+
+
+module.exports.getProductsInfo = () => {
+  const queryText = 'select info_id, product_name from product_infos';
+  return client.query(queryText);
+};
+
+module.exports.addOrder = (obj) => {
+  console.log(obj);
   const queryText =
-    'select br.branch_id, br.branch_address, br.branch_manager_pid,emp.employee_name ,br.branch_name, count(*) number_of_employees from branches as br ,employees as emp where  br.branch_manager_pid = emp.employee_id group by br.branch_id, br.branch_manager_pid,br.branch_address,br.branch_name,emp.employee_name';
-  return client.query(queryText);
+    "insert into orders(order_id,product_id,amount,branch_id,order_date,estimated_shipment_date) VALUES (nextval('order_id_seq'),$1,$2,$3,$4,$5)";
+  const values = [
+    obj.info_id,
+    obj.amount,
+    obj.branch_id,
+    '2001-06-21',
+    obj.estimated_shipment_date,
+  ];
+  return client.query(queryText, values);
 };
 
-module.exports.getBranchById = (branchId) => {
-  const queryText = "select br.branch_id, br.branch_address, br.branch_manager_pid, emp.employee_name ,br.branch_name, count(*) number_of_employees from branches as br ,employees as emp where br.branch_id = $1 and br.branch_manager_pid = emp.employee_id group by br.branch_id, br.branch_manager_pid,br.branch_address,br.branch_name,emp.employee_name"
-  const values = [branchId];
-  return client.query(queryText,values);
-}
+//const queryText = "insert into employees(employee_id,employee_name, employee_salary,branch_id, email, user_password)
+//values(nextval('employee_id_sequence'),$1,$2,$3,$4,$5)";
+
 module.exports.getBranches = () => {
   const queryText = "select br.branch_id, br.branch_address, br.branch_manager_pid,emp.employee_name ,br.branch_name, count(*) number_of_employees from branches as br ,employees as emp where  br.branch_manager_pid = emp.employee_id group by br.branch_id, br.branch_manager_pid,br.branch_address,br.branch_name,emp.employee_name"
   return client.query(queryText);
@@ -104,3 +117,15 @@ module.exports.getLeastStockProducts = () => {
   `
   return client.query(queryText);
 }
+
+module.exports.getProductsWithInfos = (branchId) => {
+  const queryText = "SELECT * FROM products_with_infos where products_branch_id = $1";
+  const values = [branchId];
+  return client.query(queryText,values);
+}
+module.exports.getEmployeesFromBranch = (branchId) => {
+  const queryText = "SELECT * FROM employees where branch_id = $1";
+  const values = [branchId];
+  return client.query(queryText,values);
+}
+
