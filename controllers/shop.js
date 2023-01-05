@@ -1,15 +1,23 @@
 const dbHelper = require('../data/DbHelper');
 
-module.exports.getIndex = (req, res, next) => {
-  dbHelper
-    .getEmployees()
-    .then((result) => {
-      res.send(result.rows);
-    })
-    .catch((err) => {
-      console.log(err);
+
+module.exports.getEmployees = (req, res, next) => {
+    dbHelper.getEmployeesWithBranches().then(result => {
+        const data = result.rows.map(element => formatEmployee(element));
+        res.send(data);
+    }).catch(err => {
+        console.log(err);
     });
-};
+}
+
+module.exports.deleteEmployee = (req,res,next) => {
+    const employeeId = req.body.employeeid;
+    dbHelper.deleteEmployeeById(employeeId).then(result => {
+        res.send(result);
+    }).catch(err => {
+        console.log(err);
+    });
+}
 
 module.exports.getOrders = (req, res, next) => {
   dbHelper
@@ -19,11 +27,49 @@ module.exports.getOrders = (req, res, next) => {
         orders: result.rows.map((element) => formatOrder(element)),
       };
       res.send(map);
-    })
-    .catch((err) => {
+    }).catch((err) => {
       console.log(err);
     });
 };
+
+module.exports.getProductsWithInfos = (req, res, next) => {
+  const branch_id = req.params.branchid;
+  dbHelper
+    .getProductsWithInfos(branch_id)
+    .then((result) => {
+      console.log(result.rows);
+      const map = {
+        products_with_infos: result.rows.map(element=>formatProduct(element))
+      };
+      res.send(map);
+    }).catch((err) => {
+      console.log(err);
+    });
+};
+module.exports.getEmployeesFromBranch = (req, res, next) => {
+  const branch_id = req.params.branchid;
+  dbHelper
+    .getEmployeesFromBranch(branch_id)
+    .then((result) => {
+      const map = {
+        employees_from_branch: result.rows.map(element=>formatEmployee(element))
+      };
+      res.send(map);
+    }).catch((err) => {
+      console.log(err);
+    });
+};
+
+module.exports.getBranch = (req, res, next) => {
+    const branchId = req.params.branchid;
+    dbHelper.getBranchById(branchId).then(result => {
+
+        const branch = result.rows[0]; 
+        res.send(branch);
+    }).catch(err => {
+        console.log(err);
+    })
+}
 
 module.exports.getBranches = (req, res) => {
   dbHelper
@@ -64,6 +110,7 @@ module.exports.getUndelieveredOrders = (req, res) => {
       console.log(err);
     });
 };
+
 
 module.exports.getProductsInfo = (req, res) => {
   dbHelper
@@ -109,4 +156,28 @@ function formatBranch(element) {
     branch_address: element.branch_address,
     employee_name: element.employee_name,
   };
+}
+
+function formatEmployee(element) {
+    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const formatter = new Intl.NumberFormat('tr-TR', {style: 'currency',currency: 'TRY',});
+    return {
+        employee_id: element.employee_id,
+        employee_name: element.employee_name,
+        employee_salary: formatter.format(element.employee_salary),
+        awl: (element.awl == false) ? "İzinli Değil":"İzinli",
+        awl_date: (element.awl_date == undefined ) ? "Yok":element.awl_date.toLocaleDateString("tr-TR",options),
+        branch_name: element.branch_name
+    }
+}
+function formatProduct(element) {
+  var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const formatter = new Intl.NumberFormat('tr-TR', {style: 'currency',currency: 'TRY',});
+  return {
+      products_id: element.products_id,
+      product_name: element.product_name,
+      product_price: formatter.format(element.product_price),
+      product_skt: element.product_skt.toLocaleDateString("tr-TR",options),
+      product_stock: element.product_stock
+  }
 }

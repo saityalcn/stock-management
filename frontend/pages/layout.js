@@ -19,6 +19,7 @@ const renderUserNameArea = (name) => {
   return <Header>{name}</Header>;
 };
 
+
 export default (props) => {
   const router = useRouter();
   useEffect(() => {
@@ -32,7 +33,6 @@ export default (props) => {
       .then((res) => res.json())
       .then((data) => {
         currentUser = data;
-        console.log(currentUser.employee_name);
       });
   }, [currentUser]);
   return (
@@ -85,7 +85,7 @@ export default (props) => {
             as="a"
             style={{ color: koyu_gri }}
             onClick={() => {
-              router.push('/calisan');
+              router.push('/calisanlar');
             }}
           >
             <Icon name="id badge" />

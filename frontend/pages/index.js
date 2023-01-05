@@ -26,33 +26,28 @@ let myHeaders = new Headers({
   'Content-Type': 'application/json',
 });
 
-const [isSending, setIsSending] = useState(false);
-const router = useRouter();
-const sendRequest = useCallback(
-  async (event) => {
-    if (isSending) return;
-    setIsSending(true);
-    const email = event.target.email.value;
-    const password = event.target.password.value;
-    const jsonObject = JSON.stringify({ email: email, password: password });
-    const response = await fetch('http://localhost:10500/account/log-in', {
-      method: 'POST',
-      headers: myHeaders,
-      body: jsonObject,
-    });
-    jsonResponse = await response.json();
-    console.log(jsonResponse);
-    if (jsonResponse.isAuthenticated === true) {
-      jsCookie.set('token', jsonResponse.userId);
-      return router.push('/home');
-    } else wrongInfoError = true;
-
-    setIsSending(false);
-  },
-  [isSending]
-);
-
 function Home() {
+  const [isSending, setIsSending] = useState(false);
+const router = useRouter();
+const sendRequest = useCallback(async (event) => {
+  if (isSending) return
+  setIsSending(true);
+  const email = event.target.email.value;
+  const password = event.target.password.value;
+  const jsonObject = JSON.stringify({email: email, password: password});
+  const response = await fetch('http://localhost:10500/account/log-in', {method: "POST", headers: myHeaders, body:jsonObject});
+  jsonResponse = await response.json();
+  console.log(jsonResponse);
+  if(jsonResponse.isAuthenticated === true){
+    jsCookie.set('token', jsonResponse.userId);
+    return router.push('/home');
+  }
+  else
+    wrongInfoError = true;
+  
+  setIsSending(false)
+}, [isSending]);
+
   return (
     <div>
       <link

@@ -19,7 +19,6 @@ const izinli_mesaji = 'XXXX Tarihine kadar izinli';
 
 export default () => {
   return (
-    <MainLayout>
     <div>
       <Card centered style={{ marginTop: '3rem' }}>
         <Image
@@ -77,9 +76,7 @@ export default () => {
           {/* <Card.Description></Card.Description>
         <Card.Description></Card.Description> */}
         </Card.Content>
-        <Button negative>Geri Dön</Button>
       </Card>
     </div>
-    </MainLayout>
   );
 };

@@ -11,7 +11,7 @@ const myHeaders = new Headers({
   'Content-Type': 'application/json',
 });
 
-//TODO siparis gelirse o satiri disable edip yesile boya,
+//TODO: siparis gelirse o satiri disable edip yesile boya,
 
 const getOrderId = (selectedOrderId) => {
   orderId = selectedOrderId;
@@ -25,14 +25,13 @@ export const render_siparisler = (siparisler) => {
       if (isSending) return;
       setIsSending(true);
       const jsonObject = JSON.stringify({ orderid: orderId });
-      console.log(jsonObject);
+      //console.log(jsonObject);
       const response = await fetch(
         'http://localhost:10500/update-order-state',
         { method: 'POST', headers: myHeaders, body: jsonObject }
       );
       //jsonResponse = await response.json();
       //console.log(jsonResponse);
-
       setIsSending(false);
     },
     [isSending]
