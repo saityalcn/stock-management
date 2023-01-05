@@ -30,7 +30,6 @@ const siparis_olustur = () => {
           text: element.branch_name,
           value: element.branch_name,
         }));
-        console.log(subeler);
       });
   }, [subeler]);
 
