@@ -1,10 +1,11 @@
 const router = require('express').Router();
 const shopController = require('../controllers/shop');
-
+const jsonParser = require('body-parser').json();
 router.get('/', shopController.getIndex);
 router.get('/orders', shopController.getOrders);
 router.get('/beklenen-siparisler', shopController.getUndelieveredOrders);
 router.get('/branches', shopController.getBranches);
+router.get('/product_info', shopController.getProductsInfo);
 router.post('/update-order-state', shopController.postUpdateOrderState);
-
+router.post('/add-order', shopController.addOrder);
 module.exports = router;

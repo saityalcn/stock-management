@@ -52,7 +52,6 @@ module.exports.postUpdateOrderState = (req, res, next) => {
 };
 
 module.exports.getUndelieveredOrders = (req, res) => {
-  console.log('ndsjad');
   dbHelper
     .getUndelieveredOrders()
     .then((result) => {
@@ -66,6 +65,28 @@ module.exports.getUndelieveredOrders = (req, res) => {
     });
 };
 
+module.exports.getProductsInfo = (req, res) => {
+  dbHelper
+    .getProductsInfo()
+    .then((result) => {
+      res.send(result.rows);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+module.exports.addOrder = (req, res) => {
+  dbHelper
+    .addOrder(req.body)
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 function formatOrder(element) {
   return {
     order_id: element.order_id,
@@ -73,8 +94,10 @@ function formatOrder(element) {
     amount: element.amount,
     branch_name: element.branch_name,
     order_date: element.order_date.toLocaleDateString('tr-TR'),
-    estimated_shipment_date:
-      element.estimated_shipment_date.toLocaleDateString('tr-TR'),
+
+    estimated_shipment_date: element.estimated_shipment_date
+      ? element.estimated_shipment_date.toLocaleDateString('tr-TR')
+      : '',
     order_state: element.order_state,
   };
 }
