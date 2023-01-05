@@ -27,7 +27,7 @@ let myHeaders = new Headers({
 });
 
 function Home() {
-  const [isSending, setIsSending] = useState(false);
+const [isSending, setIsSending] = useState(false);
 const router = useRouter();
 const sendRequest = useCallback(async (event) => {
   if (isSending) return

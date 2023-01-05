@@ -105,7 +105,7 @@ export default (props) => {
             as="a"
             style={{ color: koyu_gri }}
             onClick={() => {
-              router.push('/subeler');
+              router.push('/satislar');
             }}
           >
             <Icon name="clipboard list" />

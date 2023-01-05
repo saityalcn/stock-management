@@ -10,8 +10,18 @@ module.exports.getEmployees = (req, res, next) => {
     });
 }
 
+module.exports.postAddEmployee = (req, res,next) => {
+    const employee = req.body;
+    dbHelper.addEmployee(employee).then(result => {
+      res.send(result);
+    }).catch(err => {
+      console.log(err);
+    })
+}
+
 module.exports.deleteEmployee = (req,res,next) => {
     const employeeId = req.body.employeeid;
+    console.log(employeeId);
     dbHelper.deleteEmployeeById(employeeId).then(result => {
         res.send(result);
     }).catch(err => {
@@ -63,7 +73,6 @@ module.exports.getEmployeesFromBranch = (req, res, next) => {
 module.exports.getBranch = (req, res, next) => {
     const branchId = req.params.branchid;
     dbHelper.getBranchById(branchId).then(result => {
-
         const branch = result.rows[0]; 
         res.send(branch);
     }).catch(err => {
@@ -90,7 +99,7 @@ module.exports.postUpdateOrderState = (req, res, next) => {
   dbHelper
     .updateOrderState(orderId)
     .then((result) => {
-      res.send();
+      res.send(result);
     })
     .catch((err) => {
       console.log(err);
@@ -110,6 +119,20 @@ module.exports.getUndelieveredOrders = (req, res) => {
       console.log(err);
     });
 };
+
+module.exports.setAwl = (req,res,next) => {
+  const employeeId = req.body.employeeId; 
+  const date = req.body.awl_date;
+  dbHelper.setAwlForEmployee(employeeId, date).then(result => {
+    res.send(result);
+  }).catch(err => {
+    console.log(err);
+  })
+}
+
+module.exports.getLeastStockProducts = (req,res,next) => {
+  dbHelper.getLeastStockProducts().then(result => res.send(result.rows)).catch(err => console.log(err));
+}
 
 
 module.exports.getProductsInfo = (req, res) => {
