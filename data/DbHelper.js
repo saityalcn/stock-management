@@ -40,6 +40,7 @@ module.exports.findEmployeeByEmail = (email) => {
 };
 
 module.exports.getEmployeesWithBranches = () => {
+  client.query('select * from awl_update()');
   const queryText = 'select * from employees, branches where branches.branch_id=employees.branch_id';
   return client.query(queryText);
 };
@@ -129,3 +130,31 @@ module.exports.getEmployeesFromBranch = (branchId) => {
   return client.query(queryText,values);
 }
 
+module.exports.getSales = () => {
+  const queryText = `select * from sales, products,product_infos,branches where sales_product_id = products_id and products_infos_id = info_id and products_branch_id = branch_id and sold_date IN(
+		select sold_date from sales GROUP BY sales.sold_date having (date_part('year', sold_date) > date_part('year', CURRENT_DATE)-1))`;
+  return client.query(queryText);
+}
+
+module.exports.getDiscounts = () => {
+  const queryText = "select * from get_products_with_discount(), branches where products_branch_id=branch_id AND discount_rate > 0";
+  return client.query(queryText);
+}
+
+module.exports.addDiscount = (productId, discountRate) => {
+  const queryText = "update products set discount_rate=$1 where products_id=$2";
+  const values=[discountRate, productId];
+  return client.query(queryText,values);
+} 
+
+module.exports.cancelDiscount = (productId) => {
+  const queryText = "update products set discount_rate=0 where products_id=$1";
+  const values=[productId];
+  return client.query(queryText,values);
+} 
+
+module.exports.addSale = (infoId, branchId,amount) => {
+  const queryText = "select * from sales_operator($1,$2,$3)";
+  const values = [branchId,infoId,amount];
+  return client.query(queryText, values);
+}

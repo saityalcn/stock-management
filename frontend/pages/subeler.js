@@ -15,7 +15,7 @@ const render_subeler = (subelerimiz) => {
           <Image
             floated="right"
             size="medium"
-            src="https://react.semantic-ui.com/images/avatar/large/steve.jpg"
+            src="https://www.marketingturkiye.com.tr/wp-content/uploads/2019/03/market.jpg"
           />
           <Card.Header>{sube.branch_name}</Card.Header>
           {/* <Card.Meta>Friends of Elliot</Card.Meta> */}

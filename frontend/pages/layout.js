@@ -15,7 +15,6 @@ const myHeaders = new Headers({
 });
 
 const renderUserNameArea = (name) => {
-  console.log(name);
   return <Header>{name}</Header>;
 };
 
@@ -113,7 +112,7 @@ export default (props) => {
           </Menu.Item>
         </Sidebar>
         <Sidebar.Pusher>
-          <Segment basic style={{ paddingRight: '170px' }}>
+          <Segment basic style={{ paddingRight: '170px', minHeight:"500px"}}>
             {props.children}
           </Segment>
         </Sidebar.Pusher>

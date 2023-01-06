@@ -3,6 +3,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { Table, Button, Form, Visibility, Icon } from 'semantic-ui-react';
 import { useEffect } from 'react';
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
 
 let orders = [];
 let orderId;
@@ -77,6 +78,7 @@ function siparis_table(props) {
   const [isLoading, setLoading] = useState(false);
   const [inOrders, setInOrders] = useState(false);
   const sayfa = props.sayfa;
+  const router = useRouter();
 
   useEffect(() => {
     if (sayfa === 'orders') {
@@ -122,7 +124,7 @@ function siparis_table(props) {
             <Table.HeaderCell />
             <Table.HeaderCell />
             <Table.HeaderCell>
-              <Button floated="right" primary size="small" fluid>
+              <Button floated="right" primary size="small" fluid onClick={() => {router.push("/siparis_ver");}}>
                 <Icon name="plus circle" /> Sipariş Ver
               </Button>
             </Table.HeaderCell>
