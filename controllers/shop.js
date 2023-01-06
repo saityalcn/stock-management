@@ -1,3 +1,4 @@
+const { reset } = require('nodemon');
 const dbHelper = require('../data/DbHelper');
 
 
@@ -21,7 +22,6 @@ module.exports.postAddEmployee = (req, res,next) => {
 
 module.exports.deleteEmployee = (req,res,next) => {
     const employeeId = req.body.employeeid;
-    console.log(employeeId);
     dbHelper.deleteEmployeeById(employeeId).then(result => {
         res.send(result);
     }).catch(err => {
@@ -47,7 +47,6 @@ module.exports.getProductsWithInfos = (req, res, next) => {
   dbHelper
     .getProductsWithInfos(branch_id)
     .then((result) => {
-      console.log(result.rows);
       const map = {
         products_with_infos: result.rows.map(element=>formatProduct(element))
       };
@@ -131,7 +130,10 @@ module.exports.setAwl = (req,res,next) => {
 }
 
 module.exports.getLeastStockProducts = (req,res,next) => {
-  dbHelper.getLeastStockProducts().then(result => res.send(result.rows)).catch(err => console.log(err));
+  dbHelper.getLeastStockProducts().then(result => {
+    const map = result.rows.map(element => formatProduct(element));
+    res.send(map);
+  }).catch(err => console.log(err));
 }
 
 
@@ -156,6 +158,56 @@ module.exports.addOrder = (req, res) => {
       console.log(err);
     });
 };
+
+module.exports.getSales = (req,res,next) => {
+  dbHelper.getSales().then(result =>{ 
+    const map = result.rows.map(element => formatSale(element));
+    res.send(map);
+  }).catch(err => {
+    console.log(err);
+  })
+}
+
+module.exports.getDiscounts = (req,res,next) => {
+  dbHelper.getDiscounts().then(result => {
+    const map = result.rows.map(element => formatProduct(element));
+    res.send(map);
+  })
+}
+
+module.exports.postAddDiscount = (req,res,next) => {
+  const productId = req.body.product_id;
+  const discountRate = req.body.discount_rate;
+  dbHelper.addDiscount(productId, discountRate).then(result => {
+    res.send(result);
+  }).catch(err=> {
+    console.log(err);
+    res.send(err)});
+}
+
+module.exports.postCancelDiscount = (req,res,next) => {
+  const productId = req.body.product_id;
+  dbHelper.cancelDiscount(productId).then(result => {
+    res.send(result);
+  }).catch(err => {
+    console.log(err);
+  });
+}
+
+module.exports.postAddSale = (req,res,next) => {
+  const infoId = req.body.info_id;
+  const branchId = req.body.branch_id;
+  const amount = req.body.amount;
+  console.log(infoId);
+  console.log(branchId);
+  console.log(amount);
+  dbHelper.addSale(infoId, branchId, amount).then(result => {
+    res.send(result);
+  }).catch(err => {
+    console.log(err);
+  });
+}
+
 
 function formatOrder(element) {
   return {
@@ -193,6 +245,7 @@ function formatEmployee(element) {
         branch_name: element.branch_name
     }
 }
+
 function formatProduct(element) {
   var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const formatter = new Intl.NumberFormat('tr-TR', {style: 'currency',currency: 'TRY',});
@@ -201,6 +254,22 @@ function formatProduct(element) {
       product_name: element.product_name,
       product_price: formatter.format(element.product_price),
       product_skt: element.product_skt.toLocaleDateString("tr-TR",options),
-      product_stock: element.product_stock
+      product_stock: element.product_stock,
+      branch_name: element.branch_name,
+      products_infos_id: element.products_infos_id,
+  }
+}
+
+function formatSale(element) {
+  var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const formatter = new Intl.NumberFormat('tr-TR', {style: 'currency',currency: 'TRY',});
+  return {
+      sale_id: element.sale_id,
+      amount: element.amount,
+      sold_price: formatter.format(element.sold_price),
+      sold_date: element.sold_date.toLocaleDateString("tr-TR",options),
+      product_stock: element.product_stock,
+      branch_name: element.branch_name,
+      product_name: element.product_name
   }
 }

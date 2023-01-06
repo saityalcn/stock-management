@@ -2,7 +2,6 @@ const router = require('express').Router();
 const shopController = require('../controllers/shop');
 const jsonParser = require('body-parser').json();
 
-router.get('/', shopController.getIndex);
 router.get('/orders', shopController.getOrders);
 router.get('/beklenen-siparisler', shopController.getUndelieveredOrders);
 router.get('/branches', shopController.getBranches);
@@ -17,5 +16,10 @@ router.post('/employee/set-awl', jsonParser, shopController.setAwl);
 router.get('/least-stock-products', shopController.getLeastStockProducts);
 router.get('/branch/products/:branchid',shopController.getProductsWithInfos);
 router.get('/branch/employees/:branchid',shopController.getEmployeesFromBranch);
+router.get('/sales', shopController.getSales);
+router.get('/discounts', shopController.getDiscounts);
+router.post('/add-discount', jsonParser, shopController.postAddDiscount);
+router.post('/cancel-discount', jsonParser, shopController.postCancelDiscount);
+router.post('/add-sale', jsonParser, shopController.postAddSale);
 
 module.exports = router;

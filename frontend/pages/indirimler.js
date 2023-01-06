@@ -1,10 +1,11 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Table, Button, Form, Visibility } from 'semantic-ui-react';
+import { Table, Button, Form, Visibility,Icon } from 'semantic-ui-react';
 import { useEffect } from 'react';
 import { useState, useCallback } from 'react';
 
-let orders = [];
+let products = [];
+let productId;
 let orderId;
 let interval;
 const myHeaders = new Headers({
@@ -13,21 +14,17 @@ const myHeaders = new Headers({
 
 //TODO siparis gelirse o satiri disable edip yesile boya,
 
-const getOrderId = (selectedOrderId) => {
-  orderId = selectedOrderId;
-};
-
-const render_siparisler = (siparisler) => {
+const render_urunler = (urunler) => {
   const [isSending, setIsSending] = useState(false);
 
   const sendRequest = useCallback(
     async (event) => {
       if (isSending) return;
       setIsSending(true);
-      const jsonObject = JSON.stringify({ orderid: orderId });
+      const jsonObject = JSON.stringify({ product_id: productId});
       console.log(jsonObject);
       const response = await fetch(
-        'http://localhost:10500/update-order-state',
+        'http://localhost:10500/cancel-discount',
         { method: 'POST', headers: myHeaders, body: jsonObject }
       );
       //jsonResponse = await response.json();
@@ -38,31 +35,24 @@ const render_siparisler = (siparisler) => {
     [isSending]
   );
 
-  return siparisler.map((siparis) => {
+  return urunler.map((urun) => {
     let flag = true;
-    if (siparis.order_state === 'Teslim Edildi') {
-      flag = false;
-    }
     return (
       <Table.Row>
-        <Table.Cell>{siparis.order_id}</Table.Cell>
-        <Table.Cell>{siparis.product_name}</Table.Cell>
-        <Table.Cell>{siparis.amount}</Table.Cell>
-        <Table.Cell>{siparis.order_date}</Table.Cell>
-        <Table.Cell>{siparis.estimated_shipment_date}</Table.Cell>
+        <Table.Cell>{urun.products_id}</Table.Cell>
+        <Table.Cell>{urun.branch_name}</Table.Cell>
+        <Table.Cell>{urun.product_name}</Table.Cell>
+        <Table.Cell>{urun.product_price}</Table.Cell>
+        <Table.Cell>{urun.estimated_shipment_date}</Table.Cell>
         <Table.Cell>
           <Form onSubmit={sendRequest}>
-            {flag && (
-              <Button
-                fluid
-                content="Onayla"
-                icon="check circle"
-                positive
-                loading={isSending}
-                type="submit"
-                onClick={getOrderId(siparis.order_id)}
-              ></Button>
-            )}
+          <Button inverted color='red' onClick={() => {
+                productId = urun.products_id;
+                sendRequest();
+              }}>
+                <Icon name='remove' />
+                    Kaldır
+            </Button>
           </Form>
         </Table.Cell>
       </Table.Row>
@@ -70,20 +60,20 @@ const render_siparisler = (siparisler) => {
   });
 };
 
-function siparis_table() {
+function urunler_tablo() {
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    fetch('http://localhost:10500/orders')
+    fetch('http://localhost:10500/discounts')
       .then((res) => res.json())
       .then((data) => {
         setData(orderId);
-        orders = data.orders;
+        products = data;
         setLoading(false);
       });
-  }, [orders]);
+  }, [products]);
 
   return (
     <Table unstackable padded>
@@ -99,9 +89,9 @@ function siparis_table() {
         </Table.Row>
       </Table.Header>
 
-      <Table.Body>{render_siparisler(orders)}</Table.Body>
+      <Table.Body>{render_urunler(products)}</Table.Body>
     </Table>
   );
 }
 
-export default siparis_table;
+export default urunler_tablo;

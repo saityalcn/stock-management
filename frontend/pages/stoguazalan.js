@@ -72,10 +72,9 @@ function siparis_table() {
           <Table.HeaderCell>Ürün</Table.HeaderCell>
           <Table.HeaderCell>Stok Miktarı</Table.HeaderCell>
           <Table.HeaderCell>Fiyat</Table.HeaderCell>
-          <Table.HeaderCell>SKT</Table.HeaderCell>
+          <Table.HeaderCell></Table.HeaderCell>
         </Table.Row>
       </Table.Header>
-
       <Table.Body>{render_siparisler(orders)}</Table.Body>
     </Table>
   );
