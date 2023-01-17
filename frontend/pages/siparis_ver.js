@@ -86,13 +86,16 @@ const siparis_olustur = () => {
     const amount = event.target.miktar.value;
     const estimated_shipment_date = event.target.estimated.value;
     const skt = event.target.estimated.value;
+    const productPrice = event.target.product_price.value;
     const jsonObject = JSON.stringify({
       product_id: product_id,
       amount: amount,
+      product_price: productPrice,
       estimated_shipment_date: estimated_shipment_date,
       branch_id: branch_id,
       skt: skt,
     });
+    console.log(jsonObject);
     const response = await fetch('http://localhost:10500/add-order', {
       method: 'POST',
       headers: myHeaders,
@@ -102,7 +105,7 @@ const siparis_olustur = () => {
 
   return (
     <Layout>
-      <Form onSubmit={() => writeOrderToDataBase}>
+      <Form onSubmit={writeOrderToDataBase}>
         <Form.Select
           label="Ürün"
           options={options1}
@@ -121,6 +124,7 @@ const siparis_olustur = () => {
         ></Form.Select>
 
         <Form.Field name="miktar" label="Miktar" control="input" />
+        <Form.Input name="product_price" type="number" label="Ürün Fiyatı" />
         <Form.Input name="estimated" type="date" label="Teslimat Tarihi" />
         <Form.Input
           name="skt"

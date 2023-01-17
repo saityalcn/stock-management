@@ -3,12 +3,13 @@ const dbHelper = require('../data/DbHelper');
 
 
 module.exports.getEmployees = (req, res, next) => {
-    dbHelper.getEmployeesWithBranches().then(result => {
-        const data = result.rows.map(element => formatEmployee(element));
-        res.send(data);
-    }).catch(err => {
-        console.log(err);
-    });
+  const searchQuery = req.query.q;
+  dbHelper.getEmployeesWithBranches(searchQuery).then(result => {
+      const data = result.rows.map(element => formatEmployee(element));
+      res.send(data);
+  }).catch(err => {
+      console.log(err);
+  });
 }
 
 module.exports.postAddEmployee = (req, res,next) => {
@@ -149,9 +150,11 @@ module.exports.getProductsInfo = (req, res) => {
 };
 
 module.exports.addOrder = (req, res) => {
+  console.log(req.body);
   dbHelper
     .addOrder(req.body)
     .then((result) => {
+      console.log(result);
       res.send(result);
     })
     .catch((err) => {

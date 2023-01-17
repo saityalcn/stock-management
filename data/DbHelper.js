@@ -29,7 +29,7 @@ module.exports.updateOrderState = (orderId) => {
 
 // Employee
 module.exports.getEmployees = () => {
-  const queryText = "select * from employees"
+  const queryText = "select * from employees ORDER BY employee_id"
   return client.query(queryText);
 };
 
@@ -39,10 +39,13 @@ module.exports.findEmployeeByEmail = (email) => {
   return client.query(queryText, values);
 };
 
-module.exports.getEmployeesWithBranches = () => {
+module.exports.getEmployeesWithBranches = (searchQuery) => {
   client.query('select * from awl_update()');
-  const queryText = 'select * from employees, branches where branches.branch_id=employees.branch_id';
-  return client.query(queryText);
+  if(searchQuery === undefined)
+    searchQuery = " ";
+  const queryText = "select * from employees, branches where branches.branch_id=employees.branch_id AND (employee_name LIKE $1 OR branch_name LIKE $2)ORDER BY employee_id";
+  const values = ['%' + searchQuery + '%','%' + searchQuery + '%'];
+  return client.query(queryText,values);
 };
 
 module.exports.deleteEmployeeById = (employeeId) => {
@@ -59,7 +62,7 @@ module.exports.getCurrentUser = (employeeId) => {
 
 module.exports.getUndelieveredOrders = () => {
   const queryText =
-    "select order_id, product_name, amount,branch_name,order_date,estimated_shipment_date,order_state from orders, product_infos, branches where product_infos.info_id = orders.product_id AND branches.branch_id = orders.branch_id and order_state = 'Teslim Edilmedi' ";
+    "select order_id, product_name, amount,branch_name,order_date,estimated_shipment_date,order_state from orders, product_infos, branches where product_infos.info_id = orders.product_id AND branches.branch_id = orders.branch_id and order_state IS NULL OR order_state='Teslim Edilmedi'";
   return client.query(queryText);
 };
 
@@ -73,13 +76,14 @@ module.exports.getProductsInfo = () => {
 module.exports.addOrder = (obj) => {
   console.log(obj);
   const queryText =
-    "insert into orders(order_id,product_id,amount,branch_id,order_date,estimated_shipment_date) VALUES (nextval('order_id_seq'),$1,$2,$3,$4,$5)";
+    "insert into orders(order_id,product_id,amount,branch_id,order_date,estimated_shipment_date, order_product_price, skt) VALUES (nextval('order_id_seq'),$1,$2,$3,CURRENT_DATE,$4,$5, $6)";
   const values = [
-    obj.info_id,
+    obj.product_id,
     obj.amount,
     obj.branch_id,
-    '2001-06-21',
     obj.estimated_shipment_date,
+    obj.product_price,
+    obj.skt
   ];
   return client.query(queryText, values);
 };
@@ -98,7 +102,7 @@ module.exports.getBranchById = (branchId) => {
 }
 
 module.exports.addEmployee = (employee) => {
-  const queryText = "insert into employees(employee_id,employee_name, employee_salary,branch_id, email, user_password) values(nextval('employee_id_sequence'),$1,$2,$3,$4,$5)";
+  const queryText = "insert into employees(employee_id,employee_name, employee_salary,branch_id, email, user_password) values(nextval('employee_id_seq'),$1,$2,$3,$4,$5)";
   const values = [employee.employee_name, employee.employee_salary, employee.branch_id, employee.email, employee.user_password];
   return client.query(queryText,values);
 }
@@ -111,9 +115,9 @@ module.exports.setAwlForEmployee = (employeeId, date) => {
 
 module.exports.getLeastStockProducts = () => {
   const queryText = `
-    select * from products, product_infos,branches where product_stock < 10 
+    select * from products, product_infos,branches where product_stock < 10  
     INTERSECT
-    select * from products,product_infos,branches where products_id = info_id AND branch_id = products_branch_id
+    select * from products,product_infos,branches where products_infos_id = info_id AND branch_id = products_branch_id
     ORDER BY product_stock LIMIT 10 
   `
   return client.query(queryText);

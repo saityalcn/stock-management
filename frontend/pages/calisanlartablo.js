@@ -11,6 +11,7 @@ let calisanlar = [];
 let orderId;
 let interval;
 let secilen_tarih;
+let queryText = " ";
 
 var secilen_calisan = {};
 const myHeaders = new Headers({
@@ -151,7 +152,7 @@ function siparis_table(){
   const [isLoading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true)
-    fetch('http://localhost:10500/employees')
+    fetch('http://localhost:10500/employees?q='+queryText)
       .then((res) => res.json())
       .then((data) => {
         setData(orderId)
@@ -173,6 +174,11 @@ function siparis_table(){
   return (
     <Table unstackable padded>
       <Table.Header>
+        <Table.Row>          
+          <Form.Input name="search" placeholder="Arama yapın..." type="text" label="" onChange={(e, data) => {
+                queryText = data.value;
+            }}/>
+        </Table.Row>
         <Table.Row>
           <Table.HeaderCell>ID</Table.HeaderCell>
           <Table.HeaderCell>Şube</Table.HeaderCell>

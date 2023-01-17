@@ -4,16 +4,13 @@ import Siparis from './siparis';
 import Indirimler from './indirimler';
 import AzStok from './stoguazalan';
 import CalisanlarTablo from './calisanlartablo';
+import { useEffect } from 'react';
 import {
   Header,
   Icon,
-  Image,
-  Menu,
-  Segment,
-  Sidebar,
-  Input,
-  Dropdown,
-  Container,
+  Button,
+  Form,
+  Card
 } from 'semantic-ui-react';
 import MainLayout from './layout';
 
