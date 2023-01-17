@@ -29,7 +29,6 @@ const render_urunler = (urunler) => {
       );
       //jsonResponse = await response.json();
       //console.log(jsonResponse);
-      window.location.reload(false);
       setIsSending(false);
     },
     [isSending]
@@ -43,7 +42,7 @@ const render_urunler = (urunler) => {
         <Table.Cell>{urun.branch_name}</Table.Cell>
         <Table.Cell>{urun.product_name}</Table.Cell>
         <Table.Cell>{urun.product_price}</Table.Cell>
-        <Table.Cell>{urun.estimated_shipment_date}</Table.Cell>
+        <Table.Cell>{urun.product_skt}</Table.Cell>
         <Table.Cell>
           <Form onSubmit={sendRequest}>
           <Button inverted color='red' onClick={() => {
@@ -83,7 +82,7 @@ function urunler_tablo() {
           <Table.HeaderCell>Şube</Table.HeaderCell>
           <Table.HeaderCell>Ürün</Table.HeaderCell>
           <Table.HeaderCell>İndirimli Fiyat</Table.HeaderCell>
-          <Table.HeaderCell>İndirim Bitiş</Table.HeaderCell>
+          <Table.HeaderCell>Ürün Son Kullanma Tarihi</Table.HeaderCell>
           <Table.HeaderCell>İndirimi İptal Et</Table.HeaderCell>
           <Table.HeaderCell> </Table.HeaderCell>
         </Table.Row>

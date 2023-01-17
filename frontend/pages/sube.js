@@ -167,7 +167,7 @@ sendDiscountRequest = useCallback(
     const jsonResponse = await response.json();
     console.log(jsonResponse);
     if(jsonResponse.name==='error')
-      alert("Lütfen 0-100 aralığında bir indirim oranı giriniz.");
+      alert("Indirim oranı kontrol Trigger'ı tetiklendi. Lütfen 0-100 aralığında bir indirim oranı giriniz.");
     
     else
       window.location.reload(false);
