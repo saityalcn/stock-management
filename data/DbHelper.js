@@ -5,7 +5,7 @@ module.exports.initDb = () => {
   client = new Client({
     user: 'postgres',
     host: '127.0.0.1',
-    database: 'stock_management',
+    database: 'stock-management',
     port: '5432',
     password: 'aag',
   });
@@ -74,7 +74,6 @@ module.exports.getProductsInfo = () => {
 };
 
 module.exports.addOrder = (obj) => {
-  console.log(obj);
   const queryText =
     "insert into orders(order_id,product_id,amount,branch_id,order_date,estimated_shipment_date, order_product_price, skt) VALUES (nextval('order_id_seq'),$1,$2,$3,CURRENT_DATE,$4,$5, $6)";
   const values = [
@@ -88,6 +87,18 @@ module.exports.addOrder = (obj) => {
   return client.query(queryText, values);
 };
 
+module.exports.deleteOrder = (obj) => {
+  const queryText = "delete from orders where product_id=$1 AND amount=$2 AND branch_id=$3 AND estimated_shipment_date=$4 AND skt=$5"
+  const values = [
+    obj.product_id,
+    obj.amount,
+    obj.branch_id,
+    obj.estimated_shipment_date,
+    obj.skt
+  ];
+  return client.query(queryText, values);
+}
+
 //const queryText = "insert into employees(employee_id,employee_name, employee_salary,branch_id, email, user_password)
 //values(nextval('employee_id_sequence'),$1,$2,$3,$4,$5)";
 
@@ -99,6 +110,11 @@ module.exports.getBranchById = (branchId) => {
   const queryText = "select br.branch_id, br.branch_address, br.branch_manager_pid, emp.employee_name ,br.branch_name, count(*) number_of_employees from branches as br ,employees as emp where br.branch_id = $1 and br.branch_manager_pid = emp.employee_id group by br.branch_id, br.branch_manager_pid,br.branch_address,br.branch_name,emp.employee_name"
   const values = [branchId];
   return client.query(queryText,values);
+}
+
+module.exports.getAllBranches = () => {
+  const queryText = "select * from branches"
+  return client.query(queryText);
 }
 
 module.exports.addEmployee = (employee) => {
@@ -128,6 +144,18 @@ module.exports.getProductsWithInfos = (branchId) => {
   const values = [branchId];
   return client.query(queryText,values);
 }
+
+
+module.exports.getProducts = () => {
+  const queryText = "SELECT * FROM products";
+  return client.query(queryText);
+}
+
+module.exports.deleteProduct = (id) => {
+  const queryText = "DELETE FROM products where products_id=$1";
+  return client.query(queryText, [id]);
+}
+
 module.exports.getEmployeesFromBranch = (branchId) => {
   const queryText = "SELECT * FROM employees where branch_id = $1";
   const values = [branchId];
@@ -139,6 +167,12 @@ module.exports.getSales = () => {
 		select sold_date from sales GROUP BY sales.sold_date having (date_part('year', sold_date) > date_part('year', CURRENT_DATE)-1))`;
   return client.query(queryText);
 }
+
+module.exports.getAllSales = () => {
+  const queryText = "select * from sales";
+  return client.query(queryText);
+}
+
 
 module.exports.getDiscounts = () => {
   const queryText = "select * from get_products_with_discount(), branches where products_branch_id=branch_id AND discount_rate > 0";
@@ -162,3 +196,27 @@ module.exports.addSale = (infoId, branchId,amount) => {
   const values = [branchId,infoId,amount];
   return client.query(queryText, values);
 }
+
+module.exports.saveSale = (sale) => {
+  const queryText = "insert into sales(sale_id,amount, sold_price, sold_date, sales_product_id) VALUES (nextval('sale_id_seq'),$1, $2, $3, $4)"
+  const values = [sale.amount,sale.sold_price,sale.sold_date, sale.sales_product_id];
+  return client.query(queryText, values);
+}
+
+module.exports.addProduct = (product) => {
+  const queryText = "insert into products(products_id,products_branch_id,product_stock,product_skt,products_infos_id,discount_rate) VALUES (nextval('products_id_seq'),1, 100, '2024-02-15',2,0);"
+  return client.query(queryText);
+}
+
+module.exports.deleteSale = (id) => {
+  const queryText = "delete from sales where sale_id=$1";
+  const values = [id];
+  return client.query(queryText, values);
+}
+
+module.exports.addBranch = (branch) => {
+  const queryText = "insert into branches(branch_id,branch_name, branch_address, branch_manager_pid) VALUES (nextval('branch_id_seq'),$1, $2, $3)"
+  const values = [branch.branch_name, branch.branch_address,branch.branch_manager_pid];
+  return client.query(queryText, values);
+}
+

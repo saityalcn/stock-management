@@ -13,8 +13,9 @@ app.use(shopRoutes);
 app.use('/account', accountRoutes);
 
 dbHelper.initDb().then(res => {
-    console.log("Listening On 4500");
-    app.listen(10500);
+    const port = 10500
+    console.log("Listening On " + port);
+    app.listen(port);
 }).catch(err => {
     console.log(err);
 })
