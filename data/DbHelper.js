@@ -220,3 +220,88 @@ module.exports.addBranch = (branch) => {
   return client.query(queryText, values);
 }
 
+module.exports.updateEmployee = (employee) => {
+  const queryText = "UPDATE employees SET employee_name = $1, employee_salary = $2, branch_id = $3, email = $4, user_password = $5 WHERE employee_id = $6;"
+  const values = [employee.employee_name, employee.employee_salary, employee.branch_id, employee.email, employee.user_password, employee.employee_id];
+  return client.query(queryText, values);
+}
+
+
+module.exports.findEmployeeById = (id) => {
+  const queryText = 'select * from employees where employee_id=$1';
+  const values = [id];
+  return client.query(queryText, values);
+};
+
+module.exports.updateBranch = (branch) => {
+  const queryText = "UPDATE branches SET branch_name = $1, branch_address = $2, branch_manager_pid = $3 WHERE branch_id = $4;";
+  const values = [branch.branch_name, branch.branch_address, branch.branch_manager_pid, branch.branch_id];
+  return client.query(queryText, values);
+};
+
+module.exports.findBranchById = (branchId) => {
+  const queryText = 'SELECT * FROM branches WHERE branch_id = $1';
+  const values = [branchId];
+  return client.query(queryText, values);
+};
+
+module.exports.deleteBranchById = (branchId) => {
+  const queryText = 'DELETE FROM branches WHERE branch_id = $1';
+  const values = [branchId];
+  return client.query(queryText, values);
+};
+
+module.exports.getAllOrders = () => {
+  const queryText = 'select * from orders';
+  return client.query(queryText);
+};
+
+module.exports.updateOrder = (order) => {
+  const queryText = 'UPDATE orders SET product_id = $1, amount = $2, branch_id = $3, order_date = $4, estimated_shipment_date = $5, order_product_price = $6, skt = $7 WHERE order_id = $8';
+  const values = [
+    order.product_id,
+    order.amount,
+    order.branch_id,
+    order.order_date,
+    order.estimated_shipment_date,
+    order.order_product_price,
+    order.skt,
+    order.order_id
+  ];
+  return client.query(queryText, values);
+};
+
+module.exports.findOrderById = (orderId) => {
+  const queryText = 'SELECT * FROM orders WHERE order_id = $1';
+  const values = [orderId];
+  return client.query(queryText, values);
+};
+
+module.exports.updateSale = (sale) => {
+  const queryText = 'UPDATE sales SET amount = $1, sold_price = $2, sold_date = $3, sales_product_id = $4 WHERE sale_id = $5';
+  const values = [sale.amount, sale.sold_price, sale.sold_date, sale.sales_product_id, sale.sale_id];
+  return client.query(queryText, values);
+};
+
+module.exports.findSaleById = (saleId) => {
+  const queryText = 'SELECT * FROM sales WHERE sale_id = $1';
+  const values = [saleId];
+  return client.query(queryText, values);
+};
+
+module.exports.getAllProducts = () => {
+  const queryText = 'SELECT * FROM products';
+  return client.query(queryText);
+};
+
+module.exports.updateProduct = (product) => {
+  const queryText = 'UPDATE products SET product_stock = $1, product_skt = $2, discount_rate = $3, products_branch_id = $4, products_infos_id = $5 WHERE products_id = $6';
+  const values = [product.product_stock, product.product_skt, product.discount_rate, product.products_branch_id, product.products_infos_id, product.products_id];
+  return client.query(queryText, values);
+};
+
+module.exports.findProductById = (productId) => {
+  const queryText = 'SELECT * FROM products WHERE products_id = $1';
+  const values = [productId];
+  return client.query(queryText, values);
+};
